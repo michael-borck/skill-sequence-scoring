@@ -255,7 +255,7 @@ This crossover has a direct competitive interpretation. At recreational and club
 
 ## Between-Tier vs Within-Tier Discrimination
 
-Our simulation reveals an important nuance. When comparing *between tiers* (e.g., recreational vs club), both scoring systems produce similar Cohen's $d$ effect sizes ($\sim$1.7–1.8). The choice of scoring system does not substantially affect the ability to distinguish a recreational player from a club player, or a club player from a competitive one.
+Our simulation reveals an important nuance. When comparing *between tiers* (e.g., recreational vs club), both scoring systems produce nearly identical Cohen's $d$ effect sizes — ranging from 2.3 (recreational vs club) down to 0.6 (professional vs Top 10), but with the two systems matching to within 0.03 at every tier boundary. The choice of scoring system does not substantially affect the ability to distinguish a recreational player from a club player, or a club player from a competitive one.
 
 The meaningful difference lies in *within-tier discrimination* — separating two players at the same general skill level who differ in their ability to sustain consecutive strikes. Consider two professional bowlers, both with approximately 70% strike rates, but one who tends to string strikes in runs of 4–5 and another who distributes them more evenly. Under traditional scoring, the streak bowler's compounding bonuses produce measurably higher scores. Under World Bowling, their scores are statistically indistinguishable.
 
