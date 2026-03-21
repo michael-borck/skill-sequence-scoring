@@ -25,25 +25,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from bowling_analysis import score_traditional, score_world
+from plot_style import (
+    TRAD_COLOR, WORLD_COLOR, TRAD_FILL, WORLD_FILL,
+    TRAD_BAR, WORLD_BAR, TRAD_LABEL, WORLD_LABEL,
+)
 
 FIGURES_DIR = os.path.join(os.path.dirname(__file__), '..', 'figures')
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
-
-TRAD_COLOR = '#2166ac'
-WORLD_COLOR = '#b2182b'
-
-plt.rcParams.update({
-    'font.family': 'serif',
-    'font.size': 10,
-    'axes.titlesize': 12,
-    'axes.labelsize': 11,
-    'legend.fontsize': 9,
-    'figure.dpi': 300,
-    'savefig.dpi': 300,
-    'savefig.bbox': 'tight',
-    'axes.spines.top': False,
-    'axes.spines.right': False,
-})
 
 
 def unique_permutations(items):
@@ -195,9 +183,9 @@ def main():
 
     # Left: score range
     ax1.bar([n - 0.18 for n in n_strikes_vals], trad_ranges, width=0.35,
-            color=TRAD_COLOR, label='Traditional', alpha=0.85)
+            label=TRAD_LABEL, **TRAD_BAR)
     ax1.bar([n + 0.18 for n in n_strikes_vals], world_ranges, width=0.35,
-            color=WORLD_COLOR, label='World Bowling', alpha=0.85)
+            label=WORLD_LABEL, **WORLD_BAR)
     ax1.set_xlabel('Number of Strikes (out of 9 frames)')
     ax1.set_ylabel('Score Range (max − min)')
     ax1.set_title('Score Range Across All Orderings')
@@ -205,10 +193,10 @@ def main():
     ax1.set_xticks(n_strikes_vals)
 
     # Right: standard deviation
-    ax2.plot(n_strikes_vals, trad_stdevs, 'o-', color=TRAD_COLOR,
-             label='Traditional', markersize=6)
-    ax2.plot(n_strikes_vals, [0]*8, 's--', color=WORLD_COLOR,
-             label='World Bowling (always 0)', markersize=6, alpha=0.7)
+    ax2.plot(n_strikes_vals, trad_stdevs, '-', marker='o', color=TRAD_COLOR,
+             label=TRAD_LABEL, markersize=6)
+    ax2.plot(n_strikes_vals, [0]*8, '--', marker='s', color=WORLD_COLOR,
+             label=WORLD_LABEL + ' (always 0)', markersize=6, alpha=0.7)
     ax2.set_xlabel('Number of Strikes (out of 9 frames)')
     ax2.set_ylabel('Score Std Deviation')
     ax2.set_title('Score Variability Due to Frame Order')
@@ -236,13 +224,12 @@ def main():
     trad_x = sorted(trad_counter.keys())
     trad_y = [trad_counter[s] for s in trad_x]
 
-    ax.bar(trad_x, trad_y, width=0.8, color=TRAD_COLOR, alpha=0.85,
-           label='Traditional')
+    ax.bar(trad_x, trad_y, width=0.8, label=TRAD_LABEL, **TRAD_BAR)
 
     # World Bowling: single vertical line
     wb_score = r5['world_scores'][0]
-    ax.axvline(wb_score, color=WORLD_COLOR, linewidth=2.5, linestyle='-',
-               label=f'World Bowling (all = {wb_score})')
+    ax.axvline(wb_score, color=WORLD_COLOR, linewidth=2.5, linestyle='--',
+               label=f'{WORLD_LABEL} (all = {wb_score})')
 
     ax.set_xlabel('Game Score')
     ax.set_ylabel('Number of Orderings')

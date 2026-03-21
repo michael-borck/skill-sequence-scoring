@@ -137,7 +137,7 @@ We compute scores for fixed frame compositions under varying orderings. Consider
 
 Under World Bowling, all four orderings score identically (219). Under traditional scoring, the score varies by 20 points (188–208) depending solely on the ordering.
 
-![Sequence sensitivity: four orderings of the same 5-strike, 4-spare composition. Traditional scores vary; World Bowling scores are identical.](../figures/fig5_sequence_sensitivity.pdf){#fig-sequence width=100%}
+![Sequence sensitivity across three compositions (2, 5, and 7 strikes out of 9 frames). In each panel, the same frames are reordered. World Bowling scores are identical for all orderings; traditional scores vary, with the range increasing at higher strike counts.](../figures/fig5_sequence_sensitivity.pdf){#fig-sequence width=100%}
 
 ## Exhaustive Permutation Analysis
 
@@ -191,7 +191,7 @@ Two observations are immediate. First, the initial strikes are undervalued in tr
 
 This structure rewards the *completion* of a skill streak more than its initiation. The first strike of a sequence is worth relatively little; the strike that extends a string is worth substantially more. Under World Bowling, every strike is worth exactly the same regardless of what surrounds it.
 
-![Left: total game score as a function of consecutive strikes from frame 1. Right: marginal value of each additional strike. Traditional scoring is super-linear; World Bowling is flat at +21.](../figures/fig3_reward_gradient.pdf){#fig-gradient width=100%}
+![Marginal value of each additional consecutive strike, shown for three different non-strike fill patterns: weak (3,2), mid (5,4), and strong (8,1). The compounding pattern in traditional scoring and the flat World Bowling marginal are structural, not dependent on the fill choice.](../figures/fig3_reward_gradient.pdf){#fig-gradient width=100%}
 
 
 # Part 2: Skill-Weighted Simulation {.unnumbered}
