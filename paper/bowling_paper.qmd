@@ -335,9 +335,13 @@ We have demonstrated, through exact combinatorial analysis and skill-weighted si
 The complexity of traditional scoring is not an accident of history. It is the mechanism by which the system encodes the quality most distinctive about elite bowling: the ability to string consecutive strikes across frames and across games. Removing that complexity removes that measurement. Current-frame scoring is appropriate for recreational participation. It is not appropriate for professional competition.
 
 
+# Reproducibility {.unnumbered}
+
+All results in this paper are fully reproducible. The source code, exact distribution data, and analysis scripts are publicly available at <https://github.com/michael-borck/skill-sequence-scoring>. An interactive companion website at <https://michael-borck.github.io/skill-sequence-scoring> allows readers to explore the sequence sensitivity and reward gradient results directly.
+
 # Acknowledgements {.unnumbered}
 
-Score distribution computations were performed using an independent Python implementation verified against published tables by Balmoral Software. Simulation code and full distribution tables are available at <https://github.com/michael-borck/skill-sequence-scoring>.
+Score distribution computations were performed using an independent Python implementation verified against published tables by Balmoral Software.
 
 
 # References {.unnumbered}

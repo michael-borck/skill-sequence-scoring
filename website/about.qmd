@@ -1,0 +1,50 @@
+---
+title: "About"
+---
+
+## The Paper
+
+**Skill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems**
+
+*Michael Borck*
+School of Marketing and Management, Curtin University, Perth, Australia
+
+Target journal: *Journal of Quantitative Analysis in Sports*
+
+## Summary
+
+This paper demonstrates, through exact combinatorial analysis and Monte Carlo simulation, that traditional and World Bowling scoring systems differ in mathematically precise and practically significant ways:
+
+1. Traditional scoring is **sequence-sensitive** — the order of frames matters. World Bowling is commutative — order is irrelevant.
+2. Traditional scoring has a **compounding reward gradient** — each consecutive strike is worth more. World Bowling is linear.
+3. The scoring systems' discriminating power **crosses over at ~50% strike rate** — below this, World Bowling provides more spread; above it, traditional provides 33% more at the professional level.
+4. The distinction matters most **within skill tiers** — both systems separate recreational from professional players, but only traditional scoring separates elite players who differ in streak ability.
+
+## Reproducibility
+
+All results in this paper are fully reproducible. The source code, data, and analysis scripts are available at:
+
+**[github.com/michael-borck/skill-sequence-scoring](https://github.com/michael-borck/skill-sequence-scoring)**
+
+### Requirements
+
+```
+pip install matplotlib numpy scipy pandas pytest
+```
+
+### Key files
+
+| File | Description |
+|------|-------------|
+| `src/bowling_distributions.py` | Exact score distributions via dynamic programming |
+| `src/bowling_analysis.py` | Scoring functions and sequence sensitivity |
+| `src/bowling_simulation.py` | Monte Carlo simulation across skill tiers |
+| `src/sequence_permutations.py` | Exhaustive permutation analysis |
+| `src/bowling_visualisations.py` | Figure generation (1–5) |
+| `src/simulation_figures.py` | Figure generation (8–11) |
+| `data/bowling_distributions.csv` | Full 0–300 score distribution tables |
+| `paper/bowling_paper.qmd` | Quarto manuscript source |
+
+## Contact
+
+michael.borck@curtin.edu.au

@@ -1,0 +1,58 @@
+---
+title: "Skill, Sequence, and Scoring"
+subtitle: "A Mathematical Comparison of Traditional and World Bowling Scoring Systems"
+---
+
+## Overview
+
+This interactive companion site accompanies the paper:
+
+> **Skill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems**
+>
+> Michael Borck, Curtin University
+
+The paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways.
+
+## Key Findings
+
+### 1. Traditional scoring is sequence-sensitive
+
+The order of frames matters. The same frame composition can produce a score range of **up to 39 points** under traditional scoring, while World Bowling collapses all orderings to a single score.
+
+**[Try it yourself &rarr;](explorer.qmd)**
+
+### 2. Traditional scoring has a compounding reward gradient
+
+Each consecutive strike is worth more than the last. Under World Bowling, every strike is worth the same regardless of context.
+
+**[Explore the gradient &rarr;](reward.qmd)**
+
+### 3. The crossover point is ~50% strike rate
+
+Below 50% strike rate, World Bowling provides more score spread. Above it, traditional scoring provides **33% more spread** at the professional level.
+
+### 4. Within-tier discrimination matters most
+
+Both systems separate recreational from professional players equally well. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes.
+
+## Reproducibility
+
+All code, data, and figures are available at:
+
+- **Source code**: [github.com/michael-borck/skill-sequence-scoring](https://github.com/michael-borck/skill-sequence-scoring)
+- **Paper PDF**: [Download](https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf)
+
+To reproduce all results:
+
+```bash
+git clone https://github.com/michael-borck/skill-sequence-scoring.git
+cd skill-sequence-scoring
+pip install -r requirements.txt
+cd src
+python bowling_distributions.py    # Exact score distributions
+python bowling_analysis.py         # Sequence sensitivity analysis
+python bowling_simulation.py       # Monte Carlo simulation
+python bowling_visualisations.py   # Generate figures 1-5
+python sequence_permutations.py    # Exhaustive permutation analysis
+python simulation_figures.py       # Generate figures 8-11
+```

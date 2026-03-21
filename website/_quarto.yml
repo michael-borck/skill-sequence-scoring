@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: ../docs
+
+website:
+  title: "Skill, Sequence, and Scoring"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: explorer.qmd
+        text: Scoring Explorer
+      - href: reward.qmd
+        text: Reward Gradient
+      - href: about.qmd
+        text: About
+
+format:
+  html:
+    theme: flatly
+    css: styles.css
+    toc: true

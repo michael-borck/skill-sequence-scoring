@@ -1,0 +1,100 @@
+[
+  {
+    "objectID": "reward.html",
+    "href": "reward.html",
+    "title": "Reward Gradient Explorer",
+    "section": "",
+    "text": "Use the slider to set the number of consecutive strikes from frame 1. All remaining frames are filled with your chosen open frame. Both scores update live.\nfunction scoreTraditional(balls) {\n  let score = 0, i = 0;\n  for (let frame = 0; frame &lt; 10; frame++) {\n    if (i &gt;= balls.length) return null;\n    if (frame &lt; 9) {\n      if (balls[i] === 10) {\n        if (i + 2 &gt;= balls.length) return null;\n        score += 10 + balls[i+1] + balls[i+2];\n        i += 1;\n      } else {\n        if (i + 1 &gt;= balls.length) return null;\n        score += balls[i] + balls[i+1];\n        if (balls[i] + balls[i+1] === 10) {\n          if (i + 2 &gt;= balls.length) return null;\n          score += balls[i+2];\n        }\n        i += 2;\n      }\n    } else {\n      if (balls[i] === 10) {\n        if (i + 2 &gt;= balls.length) return null;\n        score += 10 + balls[i+1] + balls[i+2];\n      } else {\n        if (i + 1 &gt;= balls.length) return null;\n        if (balls[i] + balls[i+1] === 10) {\n          if (i + 2 &gt;= balls.length) return null;\n          score += 10 + balls[i+2];\n        } else {\n          score += balls[i] + balls[i+1];\n        }\n      }\n    }\n  }\n  return score;\n}\n\nfunction scoreWorld(balls) {\n  let score = 0, i = 0;\n  for (let frame = 0; frame &lt; 10; frame++) {\n    if (i &gt;= balls.length) return null;\n    if (balls[i] === 10) {\n      score += 30; i += 1;\n    } else {\n      if (i + 1 &gt;= balls.length) return null;\n      if (balls[i] + balls[i+1] === 10) score += 10 + balls[i];\n      else score += balls[i] + balls[i+1];\n      i += 2;\n    }\n  }\n  return score;\n}\nviewof nStrikes = Inputs.range([0, 10], {value: 5, step: 1, label: \"Consecutive strikes (frames 1–N)\"})\nviewof fillType = Inputs.select([\"5,4 (mid)\", \"3,2 (weak)\", \"8,1 (strong)\", \"7,2 (mid-high)\"], {label: \"Non-strike fill\", value: \"5,4 (mid)\"})\nfillBalls = {\n  const map = {\"5,4 (mid)\": [5,4], \"3,2 (weak)\": [3,2], \"8,1 (strong)\": [8,1], \"7,2 (mid-high)\": [7,2]};\n  return map[fillType];\n}\n\ngradientData = {\n  let rows = [];\n  for (let n = 0; n &lt;= 10; n++) {\n    let balls = [];\n    for (let i = 0; i &lt; n; i++) balls.push(10);\n    let remaining = 10 - n;\n    for (let i = 0; i &lt; remaining; i++) balls = balls.concat(fillBalls);\n    if (n === 10) {\n      balls = [10,10,10,10,10,10,10,10,10,10,10,10];\n    } else if (n === 9) {\n      balls.pop(); balls.pop();\n      balls.push(10);\n      balls = balls.concat(fillBalls);\n    }\n    let t = scoreTraditional(balls);\n    let w = scoreWorld(balls);\n    let tm = n &gt; 0 ? t - rows[n-1].trad : 0;\n    let wm = n &gt; 0 ? w - rows[n-1].world : 0;\n    rows.push({strikes: n, trad: t, world: w, tradMarginal: tm, worldMarginal: wm, current: n === nStrikes});\n  }\n  return rows;\n}\n\ncurrentRow = gradientData[nStrikes]\nPlot = import(\"https://esm.sh/@observablehq/plot@0.6\")\nPlot.plot({\n  title: \"Marginal value of each consecutive strike\",\n  width: 700,\n  height: 350,\n  x: {label: \"Strike number\", domain: [1,2,3,4,5,6,7,8,9,10]},\n  y: {label: \"Marginal score increase\", domain: [0, 50]},\n  color: {legend: true},\n  marks: [\n    Plot.barY(gradientData.filter(d =&gt; d.strikes &gt; 0), {\n      x: d =&gt; d.strikes - 0.15,\n      y: \"tradMarginal\",\n      fill: \"#1a1a1a\",\n      dx: -8,\n      title: d =&gt; `Traditional: +${d.tradMarginal}`,\n      tip: true\n    }),\n    Plot.barY(gradientData.filter(d =&gt; d.strikes &gt; 0), {\n      x: d =&gt; d.strikes + 0.15,\n      y: \"worldMarginal\",\n      fill: \"#aaaaaa\",\n      dx: 8,\n      title: d =&gt; `World Bowling: +${d.worldMarginal}`,\n      tip: true\n    }),\n    Plot.ruleY([gradientData[1].worldMarginal], {stroke: \"#888\", strokeDasharray: \"4,4\"}),\n    Plot.ruleX([nStrikes], {stroke: \"orange\", strokeWidth: 2}),\n  ]\n})"
+  },
+  {
+    "objectID": "reward.html#what-to-notice",
+    "href": "reward.html#what-to-notice",
+    "title": "Reward Gradient Explorer",
+    "section": "What to notice",
+    "text": "What to notice\n\nTraditional marginal value increases as the run extends — the 10th strike is worth far more than the 1st\nWorld Bowling marginal is flat — every strike adds the same amount regardless of context\nChange the fill type to see that this pattern holds regardless of what the non-strike frames score\nThe compounding effect is a structural property of the bonus system, not an artefact of any particular example"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Skill, Sequence, and Scoring",
+    "section": "",
+    "text": "This interactive companion site accompanies the paper:\n\nSkill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck, Curtin University\n\nThe paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways."
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "Skill, Sequence, and Scoring",
+    "section": "",
+    "text": "This interactive companion site accompanies the paper:\n\nSkill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck, Curtin University\n\nThe paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways."
+  },
+  {
+    "objectID": "index.html#key-findings",
+    "href": "index.html#key-findings",
+    "title": "Skill, Sequence, and Scoring",
+    "section": "Key Findings",
+    "text": "Key Findings\n\n1. Traditional scoring is sequence-sensitive\nThe order of frames matters. The same frame composition can produce a score range of up to 39 points under traditional scoring, while World Bowling collapses all orderings to a single score.\nTry it yourself →\n\n\n2. Traditional scoring has a compounding reward gradient\nEach consecutive strike is worth more than the last. Under World Bowling, every strike is worth the same regardless of context.\nExplore the gradient →\n\n\n3. The crossover point is ~50% strike rate\nBelow 50% strike rate, World Bowling provides more score spread. Above it, traditional scoring provides 33% more spread at the professional level.\n\n\n4. Within-tier discrimination matters most\nBoth systems separate recreational from professional players equally well. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes."
+  },
+  {
+    "objectID": "index.html#reproducibility",
+    "href": "index.html#reproducibility",
+    "title": "Skill, Sequence, and Scoring",
+    "section": "Reproducibility",
+    "text": "Reproducibility\nAll code, data, and figures are available at:\n\nSource code: github.com/michael-borck/skill-sequence-scoring\nPaper PDF: Download\n\nTo reproduce all results:\ngit clone https://github.com/michael-borck/skill-sequence-scoring.git\ncd skill-sequence-scoring\npip install -r requirements.txt\ncd src\npython bowling_distributions.py    # Exact score distributions\npython bowling_analysis.py         # Sequence sensitivity analysis\npython bowling_simulation.py       # Monte Carlo simulation\npython bowling_visualisations.py   # Generate figures 1-5\npython sequence_permutations.py    # Exhaustive permutation analysis\npython simulation_figures.py       # Generate figures 8-11"
+  },
+  {
+    "objectID": "explorer.html",
+    "href": "explorer.html",
+    "title": "Sequence Sensitivity Explorer",
+    "section": "",
+    "text": "Build a 9-frame sequence by clicking the buttons below. Frame 10 is fixed as an open frame (5, 4) to isolate the effect of frame ordering. Both scores update live.\nfunction scoreTraditional(balls) {\n  let score = 0;\n  let i = 0;\n  for (let frame = 0; frame &lt; 10; frame++) {\n    if (i &gt;= balls.length) return null;\n    if (frame &lt; 9) {\n      if (balls[i] === 10) {\n        if (i + 2 &gt;= balls.length) return null;\n        score += 10 + balls[i+1] + balls[i+2];\n        i += 1;\n      } else {\n        if (i + 1 &gt;= balls.length) return null;\n        score += balls[i] + balls[i+1];\n        if (balls[i] + balls[i+1] === 10) {\n          if (i + 2 &gt;= balls.length) return null;\n          score += balls[i+2];\n        }\n        i += 2;\n      }\n    } else {\n      if (balls[i] === 10) {\n        if (i + 2 &gt;= balls.length) return null;\n        score += 10 + balls[i+1] + balls[i+2];\n      } else {\n        if (i + 1 &gt;= balls.length) return null;\n        if (balls[i] + balls[i+1] === 10) {\n          if (i + 2 &gt;= balls.length) return null;\n          score += 10 + balls[i+2];\n        } else {\n          score += balls[i] + balls[i+1];\n        }\n      }\n    }\n  }\n  return score;\n}\n\nfunction scoreWorld(balls) {\n  let score = 0;\n  let i = 0;\n  for (let frame = 0; frame &lt; 10; frame++) {\n    if (i &gt;= balls.length) return null;\n    if (balls[i] === 10) {\n      score += 30;\n      i += 1;\n    } else {\n      if (i + 1 &gt;= balls.length) return null;\n      if (balls[i] + balls[i+1] === 10) {\n        score += 10 + balls[i];\n      } else {\n        score += balls[i] + balls[i+1];\n      }\n      i += 2;\n    }\n  }\n  return score;\n}\n\n// ── State ──────────────────────────────────────────────────────────────────\n\nviewof frames = {\n  const container = html`&lt;div style=\"margin-bottom: 20px;\"&gt;\n    &lt;h3&gt;Your 9-frame sequence:&lt;/h3&gt;\n    &lt;div id=\"frame-display\" style=\"display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; min-height: 50px;\"&gt;&lt;/div&gt;\n    &lt;div style=\"margin-bottom: 10px;\"&gt;\n      &lt;strong&gt;Add a frame:&lt;/strong&gt;\n    &lt;/div&gt;\n    &lt;div&gt;\n      &lt;button class=\"frame-btn strike\" onclick=\"addFrame('strike')\"&gt;Strike (X)&lt;/button&gt;\n      &lt;button class=\"frame-btn spare\" onclick=\"addFrame('spare55')\"&gt;Spare (5,5)&lt;/button&gt;\n      &lt;button class=\"frame-btn spare\" onclick=\"addFrame('spare73')\"&gt;Spare (7,3)&lt;/button&gt;\n      &lt;button class=\"frame-btn spare\" onclick=\"addFrame('spare91')\"&gt;Spare (9,1)&lt;/button&gt;\n      &lt;button class=\"frame-btn open\" onclick=\"addFrame('open54')\"&gt;Open (5,4)&lt;/button&gt;\n      &lt;button class=\"frame-btn open\" onclick=\"addFrame('open81')\"&gt;Open (8,1)&lt;/button&gt;\n      &lt;button class=\"frame-btn open\" onclick=\"addFrame('open32')\"&gt;Open (3,2)&lt;/button&gt;\n    &lt;/div&gt;\n    &lt;div style=\"margin-top: 10px;\"&gt;\n      &lt;button onclick=\"undoFrame()\" style=\"padding: 6px 16px; margin-right: 8px;\"&gt;Undo&lt;/button&gt;\n      &lt;button onclick=\"clearFrames()\" style=\"padding: 6px 16px;\"&gt;Clear All&lt;/button&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;`;\n\n  let currentFrames = [];\n\n  const frameLabels = {\n    'strike': 'X',\n    'spare55': '5/',\n    'spare73': '7/',\n    'spare91': '9/',\n    'open54': '5,4',\n    'open81': '8,1',\n    'open32': '3,2'\n  };\n\n  const frameBalls = {\n    'strike': [10],\n    'spare55': [5, 5],\n    'spare73': [7, 3],\n    'spare91': [9, 1],\n    'open54': [5, 4],\n    'open81': [8, 1],\n    'open32': [3, 2]\n  };\n\n  function frameColor(type) {\n    if (type === 'strike') return '#1a1a1a';\n    if (type.startsWith('spare')) return '#888888';\n    return '#cccccc';\n  }\n\n  function render() {\n    const display = container.querySelector('#frame-display');\n    display.innerHTML = '';\n    currentFrames.forEach((f, i) =&gt; {\n      const el = html`&lt;div style=\"\n        padding: 10px 16px;\n        border-radius: 6px;\n        background: ${frameColor(f)};\n        color: ${f.startsWith('open') ? 'black' : 'white'};\n        font-weight: bold;\n        font-size: 1.1em;\n        text-align: center;\n        min-width: 40px;\n      \"&gt;F${i+1}&lt;br&gt;${frameLabels[f]}&lt;/div&gt;`;\n      display.appendChild(el);\n    });\n    if (currentFrames.length &lt; 9) {\n      const remaining = html`&lt;div style=\"\n        padding: 10px 16px; border: 2px dashed #ccc; border-radius: 6px;\n        color: #999; text-align: center; min-width: 40px;\n      \"&gt;F${currentFrames.length + 1}&lt;br&gt;?&lt;/div&gt;`;\n      display.appendChild(remaining);\n    }\n    // Always show frame 10\n    const f10 = html`&lt;div style=\"\n      padding: 10px 16px; border-radius: 6px;\n      background: #f0f0f0; border: 1px solid #ccc;\n      color: #666; text-align: center; min-width: 40px;\n    \"&gt;F10&lt;br&gt;5,4&lt;/div&gt;`;\n    display.appendChild(f10);\n\n    container.value = [...currentFrames];\n    container.dispatchEvent(new Event(\"input\"));\n  }\n\n  window.addFrame = function(type) {\n    if (currentFrames.length &lt; 9) {\n      currentFrames.push(type);\n      render();\n    }\n  };\n\n  window.undoFrame = function() {\n    currentFrames.pop();\n    render();\n  };\n\n  window.clearFrames = function() {\n    currentFrames = [];\n    render();\n  };\n\n  render();\n  return container;\n}\nframeBallsMap = ({\n  'strike': [10],\n  'spare55': [5, 5],\n  'spare73': [7, 3],\n  'spare91': [9, 1],\n  'open54': [5, 4],\n  'open81': [8, 1],\n  'open32': [3, 2]\n})\n\nballs = {\n  if (frames.length &lt; 9) return null;\n  let b = [];\n  for (let f of frames) {\n    b = b.concat(frameBallsMap[f]);\n  }\n  b = b.concat([5, 4]); // frame 10\n  return b;\n}\n\ntradScore = balls ? scoreTraditional(balls) : null\nworldScore = balls ? scoreWorld(balls) : null\nhtml`&lt;div style=\"text-align: center; margin-top: 10px; color: #666; font-style: italic;\"&gt;\n  ${frames.length &lt; 9\n    ? `Add ${9 - frames.length} more frame${9 - frames.length &gt; 1 ? 's' : ''} to see scores`\n    : tradScore !== null && worldScore !== null\n      ? `Difference: ${tradScore - worldScore &gt; 0 ? '+' : ''}${tradScore - worldScore} (Traditional ${tradScore &gt; worldScore ? 'higher' : tradScore &lt; worldScore ? 'lower' : '= World Bowling'})`\n      : ''}\n&lt;/div&gt;`"
+  },
+  {
+    "objectID": "explorer.html#how-to-use",
+    "href": "explorer.html#how-to-use",
+    "title": "Sequence Sensitivity Explorer",
+    "section": "How to use",
+    "text": "How to use\n\nClick frame buttons to build a 9-frame sequence\nWatch both scores update as you reach 9 frames\nTry reordering the same frames — click Clear All and enter them in a different order\nNotice: World Bowling always gives the same score for the same frame composition, regardless of order. Traditional scoring changes."
+  },
+  {
+    "objectID": "explorer.html#try-these-experiments",
+    "href": "explorer.html#try-these-experiments",
+    "title": "Sequence Sensitivity Explorer",
+    "section": "Try these experiments",
+    "text": "Try these experiments\nExperiment 1: Strike placement matters\n\nEnter: X, X, X, X, X, 5/, 5/, 5/, 5/ — note both scores\nClear and enter: 5/, 5/, 5/, 5/, X, X, X, X, X — note the traditional score changes, World Bowling stays the same\n\nExperiment 2: Consecutive vs scattered strikes\n\nEnter: X, X, X, 5,4, 5,4, 5,4, 5,4, 5,4, 5,4\nClear and enter: X, 5,4, X, 5,4, X, 5,4, 5,4, 5,4, 5,4\nSame three strikes, but consecutive strikes score higher under traditional scoring\n\nExperiment 3: The commutativity proof in action\n\nEnter any 9 frames you like and note the World Bowling score\nRearrange them in any order — the World Bowling score is always the same\nThis is Proposition 1 from the paper: World Bowling is commutative"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Skill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck School of Marketing and Management, Curtin University, Perth, Australia\nTarget journal: Journal of Quantitative Analysis in Sports"
+  },
+  {
+    "objectID": "about.html#the-paper",
+    "href": "about.html#the-paper",
+    "title": "About",
+    "section": "",
+    "text": "Skill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck School of Marketing and Management, Curtin University, Perth, Australia\nTarget journal: Journal of Quantitative Analysis in Sports"
+  },
+  {
+    "objectID": "about.html#summary",
+    "href": "about.html#summary",
+    "title": "About",
+    "section": "Summary",
+    "text": "Summary\nThis paper demonstrates, through exact combinatorial analysis and Monte Carlo simulation, that traditional and World Bowling scoring systems differ in mathematically precise and practically significant ways:\n\nTraditional scoring is sequence-sensitive — the order of frames matters. World Bowling is commutative — order is irrelevant.\nTraditional scoring has a compounding reward gradient — each consecutive strike is worth more. World Bowling is linear.\nThe scoring systems’ discriminating power crosses over at ~50% strike rate — below this, World Bowling provides more spread; above it, traditional provides 33% more at the professional level.\nThe distinction matters most within skill tiers — both systems separate recreational from professional players, but only traditional scoring separates elite players who differ in streak ability."
+  },
+  {
+    "objectID": "about.html#reproducibility",
+    "href": "about.html#reproducibility",
+    "title": "About",
+    "section": "Reproducibility",
+    "text": "Reproducibility\nAll results in this paper are fully reproducible. The source code, data, and analysis scripts are available at:\ngithub.com/michael-borck/skill-sequence-scoring\n\nRequirements\npip install matplotlib numpy scipy pandas pytest\n\n\nKey files\n\n\n\n\n\n\n\nFile\nDescription\n\n\n\n\nsrc/bowling_distributions.py\nExact score distributions via dynamic programming\n\n\nsrc/bowling_analysis.py\nScoring functions and sequence sensitivity\n\n\nsrc/bowling_simulation.py\nMonte Carlo simulation across skill tiers\n\n\nsrc/sequence_permutations.py\nExhaustive permutation analysis\n\n\nsrc/bowling_visualisations.py\nFigure generation (1–5)\n\n\nsrc/simulation_figures.py\nFigure generation (8–11)\n\n\ndata/bowling_distributions.csv\nFull 0–300 score distribution tables\n\n\npaper/bowling_paper.qmd\nQuarto manuscript source"
+  },
+  {
+    "objectID": "about.html#contact",
+    "href": "about.html#contact",
+    "title": "About",
+    "section": "Contact",
+    "text": "Contact\nmichael.borck@curtin.edu.au"
+  }
+]

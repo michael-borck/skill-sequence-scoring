@@ -1,0 +1,266 @@
+---
+title: "Sequence Sensitivity Explorer"
+subtitle: "Same frames, different order — see how the score changes"
+format:
+  html:
+    page-layout: full
+---
+
+Build a 9-frame sequence by clicking the buttons below. Frame 10 is fixed as an open frame (5, 4) to isolate the effect of frame ordering. Both scores update live.
+
+```{ojs}
+//| echo: false
+
+// ── Scoring functions ──────────────────────────────────────────────────────
+
+function scoreTraditional(balls) {
+  let score = 0;
+  let i = 0;
+  for (let frame = 0; frame < 10; frame++) {
+    if (i >= balls.length) return null;
+    if (frame < 9) {
+      if (balls[i] === 10) {
+        if (i + 2 >= balls.length) return null;
+        score += 10 + balls[i+1] + balls[i+2];
+        i += 1;
+      } else {
+        if (i + 1 >= balls.length) return null;
+        score += balls[i] + balls[i+1];
+        if (balls[i] + balls[i+1] === 10) {
+          if (i + 2 >= balls.length) return null;
+          score += balls[i+2];
+        }
+        i += 2;
+      }
+    } else {
+      if (balls[i] === 10) {
+        if (i + 2 >= balls.length) return null;
+        score += 10 + balls[i+1] + balls[i+2];
+      } else {
+        if (i + 1 >= balls.length) return null;
+        if (balls[i] + balls[i+1] === 10) {
+          if (i + 2 >= balls.length) return null;
+          score += 10 + balls[i+2];
+        } else {
+          score += balls[i] + balls[i+1];
+        }
+      }
+    }
+  }
+  return score;
+}
+
+function scoreWorld(balls) {
+  let score = 0;
+  let i = 0;
+  for (let frame = 0; frame < 10; frame++) {
+    if (i >= balls.length) return null;
+    if (balls[i] === 10) {
+      score += 30;
+      i += 1;
+    } else {
+      if (i + 1 >= balls.length) return null;
+      if (balls[i] + balls[i+1] === 10) {
+        score += 10 + balls[i];
+      } else {
+        score += balls[i] + balls[i+1];
+      }
+      i += 2;
+    }
+  }
+  return score;
+}
+
+// ── State ──────────────────────────────────────────────────────────────────
+
+viewof frames = {
+  const container = html`<div style="margin-bottom: 20px;">
+    <h3>Your 9-frame sequence:</h3>
+    <div id="frame-display" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; min-height: 50px;"></div>
+    <div style="margin-bottom: 10px;">
+      <strong>Add a frame:</strong>
+    </div>
+    <div>
+      <button class="frame-btn strike" onclick="addFrame('strike')">Strike (X)</button>
+      <button class="frame-btn spare" onclick="addFrame('spare55')">Spare (5,5)</button>
+      <button class="frame-btn spare" onclick="addFrame('spare73')">Spare (7,3)</button>
+      <button class="frame-btn spare" onclick="addFrame('spare91')">Spare (9,1)</button>
+      <button class="frame-btn open" onclick="addFrame('open54')">Open (5,4)</button>
+      <button class="frame-btn open" onclick="addFrame('open81')">Open (8,1)</button>
+      <button class="frame-btn open" onclick="addFrame('open32')">Open (3,2)</button>
+    </div>
+    <div style="margin-top: 10px;">
+      <button onclick="undoFrame()" style="padding: 6px 16px; margin-right: 8px;">Undo</button>
+      <button onclick="clearFrames()" style="padding: 6px 16px;">Clear All</button>
+    </div>
+  </div>`;
+
+  let currentFrames = [];
+
+  const frameLabels = {
+    'strike': 'X',
+    'spare55': '5/',
+    'spare73': '7/',
+    'spare91': '9/',
+    'open54': '5,4',
+    'open81': '8,1',
+    'open32': '3,2'
+  };
+
+  const frameBalls = {
+    'strike': [10],
+    'spare55': [5, 5],
+    'spare73': [7, 3],
+    'spare91': [9, 1],
+    'open54': [5, 4],
+    'open81': [8, 1],
+    'open32': [3, 2]
+  };
+
+  function frameColor(type) {
+    if (type === 'strike') return '#1a1a1a';
+    if (type.startsWith('spare')) return '#888888';
+    return '#cccccc';
+  }
+
+  function render() {
+    const display = container.querySelector('#frame-display');
+    display.innerHTML = '';
+    currentFrames.forEach((f, i) => {
+      const el = html`<div style="
+        padding: 10px 16px;
+        border-radius: 6px;
+        background: ${frameColor(f)};
+        color: ${f.startsWith('open') ? 'black' : 'white'};
+        font-weight: bold;
+        font-size: 1.1em;
+        text-align: center;
+        min-width: 40px;
+      ">F${i+1}<br>${frameLabels[f]}</div>`;
+      display.appendChild(el);
+    });
+    if (currentFrames.length < 9) {
+      const remaining = html`<div style="
+        padding: 10px 16px; border: 2px dashed #ccc; border-radius: 6px;
+        color: #999; text-align: center; min-width: 40px;
+      ">F${currentFrames.length + 1}<br>?</div>`;
+      display.appendChild(remaining);
+    }
+    // Always show frame 10
+    const f10 = html`<div style="
+      padding: 10px 16px; border-radius: 6px;
+      background: #f0f0f0; border: 1px solid #ccc;
+      color: #666; text-align: center; min-width: 40px;
+    ">F10<br>5,4</div>`;
+    display.appendChild(f10);
+
+    container.value = [...currentFrames];
+    container.dispatchEvent(new Event("input"));
+  }
+
+  window.addFrame = function(type) {
+    if (currentFrames.length < 9) {
+      currentFrames.push(type);
+      render();
+    }
+  };
+
+  window.undoFrame = function() {
+    currentFrames.pop();
+    render();
+  };
+
+  window.clearFrames = function() {
+    currentFrames = [];
+    render();
+  };
+
+  render();
+  return container;
+}
+```
+
+```{ojs}
+//| echo: false
+
+frameBallsMap = ({
+  'strike': [10],
+  'spare55': [5, 5],
+  'spare73': [7, 3],
+  'spare91': [9, 1],
+  'open54': [5, 4],
+  'open81': [8, 1],
+  'open32': [3, 2]
+})
+
+balls = {
+  if (frames.length < 9) return null;
+  let b = [];
+  for (let f of frames) {
+    b = b.concat(frameBallsMap[f]);
+  }
+  b = b.concat([5, 4]); // frame 10
+  return b;
+}
+
+tradScore = balls ? scoreTraditional(balls) : null
+worldScore = balls ? scoreWorld(balls) : null
+```
+
+::: {.columns}
+::: {.column width="50%"}
+```{ojs}
+//| echo: false
+html`<div class="score-display trad-score">
+  <div style="font-size: 0.5em; color: #666;">Traditional</div>
+  ${tradScore !== null ? tradScore : "—"}
+</div>`
+```
+:::
+::: {.column width="50%"}
+```{ojs}
+//| echo: false
+html`<div class="score-display world-score">
+  <div style="font-size: 0.5em; color: #888;">World Bowling</div>
+  ${worldScore !== null ? worldScore : "—"}
+</div>`
+```
+:::
+:::
+
+```{ojs}
+//| echo: false
+html`<div style="text-align: center; margin-top: 10px; color: #666; font-style: italic;">
+  ${frames.length < 9
+    ? `Add ${9 - frames.length} more frame${9 - frames.length > 1 ? 's' : ''} to see scores`
+    : tradScore !== null && worldScore !== null
+      ? `Difference: ${tradScore - worldScore > 0 ? '+' : ''}${tradScore - worldScore} (Traditional ${tradScore > worldScore ? 'higher' : tradScore < worldScore ? 'lower' : '= World Bowling'})`
+      : ''}
+</div>`
+```
+
+## How to use
+
+1. Click frame buttons to build a 9-frame sequence
+2. Watch both scores update as you reach 9 frames
+3. Try reordering the same frames — click **Clear All** and enter them in a different order
+4. Notice: World Bowling always gives the same score for the same frame composition, regardless of order. Traditional scoring changes.
+
+## Try these experiments
+
+**Experiment 1: Strike placement matters**
+
+- Enter: X, X, X, X, X, 5/, 5/, 5/, 5/ — note both scores
+- Clear and enter: 5/, 5/, 5/, 5/, X, X, X, X, X — note the traditional score changes, World Bowling stays the same
+
+**Experiment 2: Consecutive vs scattered strikes**
+
+- Enter: X, X, X, 5,4, 5,4, 5,4, 5,4, 5,4, 5,4
+- Clear and enter: X, 5,4, X, 5,4, X, 5,4, 5,4, 5,4, 5,4
+- Same three strikes, but consecutive strikes score higher under traditional scoring
+
+**Experiment 3: The commutativity proof in action**
+
+- Enter any 9 frames you like and note the World Bowling score
+- Rearrange them in any order — the World Bowling score is always the same
+- This is Proposition 1 from the paper: World Bowling is commutative
