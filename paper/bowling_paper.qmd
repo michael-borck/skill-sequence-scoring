@@ -9,7 +9,11 @@ author:
         country: Australia
     email: michael.borck@curtin.edu.au
 abstract: |
-  Ten-pin bowling supports two distinct scoring systems: the traditional system, in which strikes and spares generate bonus points from subsequent balls, and the World Bowling current-frame system, in which each frame is scored independently. This paper presents a two-part analysis of both systems. In Part 1, we use exact combinatorial enumeration to characterise each system mathematically, verifying and extending prior work by Cooper and Kennedy (1990). We prove that World Bowling scoring is commutative with respect to frame order, demonstrate that traditional scoring's reward gradient for consecutive strikes is super-linear, and quantify the score range that arises from frame reordering alone. In Part 2, we conduct Monte Carlo simulation across six empirically calibrated skill tiers — from recreational (4% strike rate) to Top 10 professional (73%) — and identify a crossover point at approximately 50% strike rate, above which traditional scoring provides substantially greater score spread than World Bowling. We do not argue that current-frame scoring lacks merit; for recreational participants, its simplicity and accessibility represent genuine improvements. Our argument is narrower: at the competitive and professional levels, where sequential skill distinguishes elite performers, current-frame scoring's commutativity property actively obscures the performance differences it should be measuring.
+  Ten-pin bowling's traditional scoring system rewards sustained performance: strikes and spares earn bonus points from subsequent balls, creating dependencies across frames. World Bowling has promoted a simpler alternative in which each frame is scored independently. But what exactly is lost when these dependencies are removed?
+
+  This paper answers that question in two parts. Part 1 uses exact combinatorial enumeration to prove that World Bowling scoring is mathematically invariant to the order of frames — meaning two players who throw identical frames in different sequences always receive the same score. Traditional scoring, by contrast, produces score differences of up to 39 points from reordering alone. Part 2 uses Monte Carlo simulation across six skill tiers, calibrated against PBA data, to identify a crossover at approximately 50% strike rate: below this, World Bowling provides adequate score spread; above it, traditional scoring provides over 30% more spread, precisely where elite competition requires finer discrimination.
+
+  We do not argue that current-frame scoring lacks merit. For recreational participants, its simplicity is a genuine improvement. Our argument is narrower: at the competitive and professional levels, where the ability to sustain consecutive strikes distinguishes elite performers, current-frame scoring's independence property actively obscures the performance differences it should be measuring.
 keywords:
   - ten-pin bowling
   - scoring systems
@@ -40,6 +44,8 @@ csl: apa.csl
 Ten-pin bowling has been scored using the same traditional system for over a century. Under this system, a strike earns ten pins plus the total of the next two balls thrown, and a spare earns ten pins plus the next ball. This forward-looking bonus structure creates scoring dependencies across frames, rewarding sustained performance non-linearly.
 
 World Bowling, the international governing body for the sport, has promoted an alternative current-frame scoring system in which each frame is scored independently: a strike earns 30 points, a spare earns 10 plus the first ball of that frame, and an open frame earns the sum of both balls. The stated motivation is simplicity — spectators and new participants can follow the score without tracking future balls.
+
+A simple example illustrates the core difference. Consider two players who each throw five strikes and four spares across frames 1–9, followed by an identical frame 10. Under World Bowling, both players score 219 — regardless of whether the strikes were consecutive or scattered throughout the game. Under traditional scoring, the player who placed strikes consecutively scores up to 20 points higher than one who alternated. The same frames, in different order, produce the same World Bowling score but meaningfully different traditional scores. This paper asks: does this distinction matter, and at what skill level does it become competitively significant?
 
 Several informal comparisons of these systems exist online, focusing primarily on average scores and the presence of impossible scores in the World Bowling range. @cooper1990 provided the foundational mathematical treatment of traditional bowling score distributions using generating functions, later extended by @hohn2009 to generalised N-frame, M-pin games. @keogh2011 studied empirical bowling score distributions using real game data. However, no prior work has formally compared the mathematical properties of both scoring systems, characterised sequence sensitivity as a distinguishing property, or quantified the skill level at which scoring system choice becomes competitively significant.
 
@@ -321,6 +327,18 @@ This intuition is an instance of **recency bias** — the cognitive tendency to 
 
 The impossibility of World Bowling scores in the range 290–299 is mathematically unavoidable given the system's design. It is a direct consequence of the discrete jump between the maximum achievable score with 9 strikes (289) and the minimum score with 10 strikes (300). This gap means that a bowler who throws nine strikes and one near-perfect spare cannot be scored above 289, while one who converts that spare to a tenth strike jumps directly to 300. The scoring cliff at the top of the range is not a feature of athletic performance — it is an artefact of linear frame independence.
 
+## The Independence Assumption and Momentum
+
+Our base simulation assumes frame-to-frame independence: each ball's outcome depends only on the player's fixed skill parameters, not on preceding results. This is a conservative assumption. The hot hand literature in bowling [@yaari2012; @dorseypalmateer2004] provides empirical evidence that consecutive strikes are positively correlated — a "momentum" or streakiness effect.
+
+To test whether this matters, we ran a supplementary simulation with a momentum model in which strike probability increases by 5 percentage points after a strike and decreases after an open frame. The result (@fig-momentum) is that momentum *amplifies* the traditional scoring advantage at every tier above competitive level. This is expected: when streaks are more likely, the compounding bonus structure of traditional scoring has more opportunities to generate score separation. The independence model therefore provides a *lower bound* on the traditional scoring advantage — the real-world effect is likely larger.
+
+![Left: score standard deviation under independent and momentum models. Right: the SD gap between systems widens under momentum at elite tiers.](../figures/fig12_momentum_comparison.pdf){#fig-momentum width=100%}
+
+## Limitations and Future Work
+
+This paper has several limitations that suggest directions for future work. First, the simulation uses a parametric skill model rather than real game data. Validating the results against a database of actual PBA tournament scores — applying both scoring systems to the same ball sequences — would provide a powerful empirical anchor. Second, while we model a simple momentum effect, more sophisticated models incorporating fatigue, lane condition changes, and frame-specific strategy could refine the magnitude estimates. Third, our analysis focuses on individual game scores; extending to multi-game series and tournament formats would address whether the discrimination differences compound over longer competitions. The source code accompanying this paper is designed to support these extensions.
+
 
 # Conclusion
 
@@ -334,7 +352,9 @@ We have demonstrated, through exact combinatorial analysis and skill-weighted si
 
 4. **The distinction matters most within skill tiers, not between them.** Both systems adequately separate recreational players from professionals. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes — the skill that defines professional bowling.
 
-The complexity of traditional scoring is not an accident of history. It is the mechanism by which the system encodes the quality most distinctive about elite bowling: the ability to string consecutive strikes across frames and across games. Removing that complexity removes that measurement. Current-frame scoring is appropriate for recreational participation. It is not appropriate for professional competition.
+The complexity of traditional scoring is not an accident of history. It is the mechanism by which the system encodes the quality most distinctive about elite bowling: the ability to string consecutive strikes across frames and across games. Removing that complexity removes that measurement.
+
+For governing bodies, tournament organisers, and league administrators, the practical implication is straightforward: current-frame scoring is appropriate for recreational participation and casual leagues, where its simplicity removes a genuine barrier to entry. It is not appropriate for professional and elite competition, where the scoring system's role is to measure and distinguish sustained skill — and where the crossover point identified in this paper places competitive bowlers firmly in the domain where traditional scoring provides superior discrimination.
 
 
 # Reproducibility {.unnumbered}

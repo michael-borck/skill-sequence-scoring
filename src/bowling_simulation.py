@@ -119,6 +119,79 @@ def simulate_game(rng, p_strike, p_spare, pin_mean):
     return balls
 
 
+# ── Momentum Model ───────────────────────────────────────────────────────────
+
+def simulate_game_momentum(rng, p_strike, p_spare, pin_mean, momentum=0.05):
+    """
+    Simulate one game with a momentum/hot-hand effect.
+
+    After a strike, the next frame's strike probability increases by `momentum`.
+    After an open frame, it decreases by `momentum`.
+    After a spare, it stays unchanged.
+    The effective probability is clamped to [0.01, 0.99].
+    """
+    balls = []
+    p_eff = p_strike
+
+    # Frames 1-9
+    for _ in range(9):
+        p_clamped = max(0.01, min(0.99, p_eff))
+        b1 = simulate_first_ball(rng, p_clamped, pin_mean)
+        balls.append(b1)
+        if b1 == 10:
+            p_eff = p_strike + momentum * (1 + (p_eff - p_strike) / max(momentum, 0.01))
+            p_eff = min(p_eff, p_strike + 3 * momentum)  # cap the streak bonus
+        elif b1 < 10:
+            b2 = simulate_second_ball(rng, b1, p_spare)
+            balls.append(b2)
+            if b1 + b2 == 10:  # spare — neutral
+                p_eff = p_strike
+            else:  # open — cold
+                p_eff = p_strike - momentum
+
+    # Frame 10
+    p_clamped = max(0.01, min(0.99, p_eff))
+    b1 = simulate_first_ball(rng, p_clamped, pin_mean)
+    balls.append(b1)
+
+    if b1 == 10:
+        p_eff = min(p_strike + 2 * momentum, 0.99)
+        b2 = simulate_first_ball(rng, max(0.01, min(0.99, p_eff)), pin_mean)
+        balls.append(b2)
+        if b2 == 10:
+            b3 = simulate_first_ball(rng, max(0.01, min(0.99, p_eff)), pin_mean)
+            balls.append(b3)
+        else:
+            b3 = simulate_second_ball(rng, b2, p_spare)
+            balls.append(b3)
+    else:
+        b2 = simulate_second_ball(rng, b1, p_spare)
+        balls.append(b2)
+        if b1 + b2 == 10:
+            b3 = simulate_first_ball(rng, max(0.01, min(0.99, p_strike)), pin_mean)
+            balls.append(b3)
+
+    return balls
+
+
+def simulate_games_momentum(n_games, p_strike, p_spare, pin_mean,
+                            momentum=0.05, seed=42):
+    """Simulate n_games with momentum model."""
+    rng = np.random.default_rng(seed)
+    trad_scores = []
+    world_scores = []
+
+    for _ in range(n_games):
+        balls = simulate_game_momentum(rng, p_strike, p_spare, pin_mean, momentum)
+        t = score_traditional(balls)
+        w = score_world(balls)
+        if t is not None and w is not None:
+            trad_scores.append(t)
+            world_scores.append(w)
+
+    return np.array(trad_scores), np.array(world_scores)
+
+
 def simulate_games(n_games, p_strike, p_spare, pin_mean, seed=42):
     """
     Simulate n_games and score under both systems.
