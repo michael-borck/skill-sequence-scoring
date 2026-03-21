@@ -66,7 +66,7 @@ Under World Bowling scoring, all ten frames are identical (no bonus ball in fram
 
 $$66^{10} = 1{,}568{,}336{,}880{,}910{,}795{,}776 \approx 1.6 \times 10^{18}$$
 
-Direct enumeration of these game spaces is computationally infeasible. We employ dynamic programming with state representation tracking pending bonus multipliers, following the convolution approach described by @balmoral. Our independent implementation produces results that match their published tables exactly at every verification point, including the mode of 77 for traditional scoring with 172,542,309,343,731,946 possible games, and the mode of 72 for World Bowling scoring with 43,781,414,679,391,290 possible games.
+Direct enumeration of these game spaces is computationally infeasible. We employ dynamic programming with state representation tracking pending bonus multipliers, following the convolution approach described by @balmoral. The key insight is that the score contribution of each ball depends only on the current pending bonus state — not on the full history of prior balls — allowing the computation to proceed frame by frame with a manageable number of distinct states (on the order of hundreds of thousands, rather than quintillions of complete games). Our independent implementation produces results that match their published tables exactly at every verification point, including the mode of 77 for traditional scoring with 172,542,309,343,731,946 possible games, and the mode of 72 for World Bowling scoring with 43,781,414,679,391,290 possible games.
 
 ## Scoring Functions
 
