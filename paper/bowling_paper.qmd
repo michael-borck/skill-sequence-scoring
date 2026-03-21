@@ -160,7 +160,7 @@ The World Bowling score range is exactly zero for every composition — confirmi
 
 ![Left: score range across all orderings by composition. Right: score standard deviation due to frame order alone. World Bowling is zero throughout.](../figures/fig6_permutation_variance.pdf){#fig-permvar width=100%}
 
-![Score distribution for all 126 orderings of 5 strikes + 4 spares. Traditional scores span 188–209; World Bowling collapses to a single value (219).](../figures/fig7_permutation_distribution.pdf){#fig-permdist width=100%}
+![Score distribution across all orderings for three compositions (2, 5, and 7 strikes). Traditional scores spread across a range that widens with strike count; World Bowling collapses to a single value (dashed line) in every case.](../figures/fig7_permutation_distribution.pdf){#fig-permdist width=100%}
 
 ## Implications for Skill
 

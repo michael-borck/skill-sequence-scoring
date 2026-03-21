@@ -212,43 +212,49 @@ def main():
     print(f'Saved: {path}')
     print(f'Saved: {png_path}')
 
-    # ── Figure 7: Score distribution for 5 strikes + 4 spares ────────────────
+    # ── Figure 7: Score distributions for 3 compositions (small-multiples) ───
 
-    # The most interesting case: 5 strikes + 4 spares = 126 permutations
-    r5 = all_results[4]  # 5 strikes + 4 spares
+    # Show 2X+7sp, 5X+4sp, 7X+2sp — same trio as Fig 5
+    panel_indices = [1, 4, 6]  # indices into all_results (0-based: 2X, 5X, 7X)
+    panel_labels = ['2 Strikes + 7 Spares', '5 Strikes + 4 Spares', '7 Strikes + 2 Spares']
 
-    fig, ax = plt.subplots(figsize=(10, 5))
-    trad_counter = Counter(r5['trad_scores'])
-    world_counter = Counter(r5['world_scores'])
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
-    trad_x = sorted(trad_counter.keys())
-    trad_y = [trad_counter[s] for s in trad_x]
+    for idx, (ri, label) in enumerate(zip(panel_indices, panel_labels)):
+        ax = axes[idx]
+        r = all_results[ri]
+        trad_counter = Counter(r['trad_scores'])
 
-    ax.bar(trad_x, trad_y, width=0.8, label=TRAD_LABEL, **TRAD_BAR)
+        trad_x = sorted(trad_counter.keys())
+        trad_y = [trad_counter[s] for s in trad_x]
 
-    # World Bowling: single vertical line
-    wb_score = r5['world_scores'][0]
-    ax.axvline(wb_score, color=WORLD_COLOR, linewidth=2.5, linestyle='--',
-               label=f'{WORLD_LABEL} (all = {wb_score})')
+        ax.bar(trad_x, trad_y, width=0.8, label=TRAD_LABEL, **TRAD_BAR)
 
-    ax.set_xlabel('Game Score')
-    ax.set_ylabel('Number of Orderings')
-    ax.set_title(f'Score Distribution: 5 Strikes + 4 Spares ({r5["n_permutations"]} orderings)')
-    ax.legend()
+        # World Bowling: single vertical line
+        wb_score = r['world_scores'][0]
+        ax.axvline(wb_score, color=WORLD_COLOR, linewidth=2.5, linestyle='--',
+                   label=f'{WORLD_LABEL} (all = {wb_score})')
 
-    # Annotate range
-    ax.annotate(f'Range: {r5["trad_min"]}–{r5["trad_max"]}\n'
-                f'({r5["trad_range"]} points)',
-                xy=(r5['trad_min'], max(trad_y) * 0.8),
-                fontsize=9, color=TRAD_COLOR)
+        ax.set_xlabel('Game Score')
+        if idx == 0:
+            ax.set_ylabel('Number of Orderings')
+        ax.set_title(f'{label}\n({r["n_permutations"]} orderings)')
+        ax.legend(fontsize=7, loc='upper left')
 
-    path = os.path.join(FIGURES_DIR, 'fig7_permutation_distribution.pdf')
-    fig.savefig(path)
-    png_path = os.path.join(FIGURES_DIR, 'fig7_permutation_distribution.png')
-    fig.savefig(png_path)
+        # Annotate range
+        ax.annotate(f'Range: {r["trad_range"]} pts',
+                    xy=(r['trad_min'], max(trad_y) * 0.85),
+                    fontsize=8, color=TRAD_COLOR, style='italic')
+
+    fig.suptitle('Score Distribution Across All Orderings of Each Composition',
+                 fontsize=13, y=1.02)
+    fig.tight_layout()
+
+    for ext in ['pdf', 'png']:
+        path = os.path.join(FIGURES_DIR, f'fig7_permutation_distribution.{ext}')
+        fig.savefig(path)
+        print(f'Saved: {path}')
     plt.close(fig)
-    print(f'Saved: {path}')
-    print(f'Saved: {png_path}')
 
     # ── Summary ──────────────────────────────────────────────────────────────
 
