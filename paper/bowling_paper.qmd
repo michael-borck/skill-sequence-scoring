@@ -363,7 +363,9 @@ All results in this paper are fully reproducible. The source code, exact distrib
 
 # Acknowledgements {.unnumbered}
 
-Score distribution computations were performed using an independent Python implementation verified against published tables by Balmoral Software.
+All computations were performed in Python using NumPy, Matplotlib, and SciPy. The manuscript was prepared with Quarto and rendered via LuaLaTeX. Score distribution computations were verified against published tables by Balmoral Software.
+
+AI-assisted tools (Anthropic Claude, GitHub Copilot, Google Gemini) were used during code development, manuscript drafting, and critical review. All mathematical results, research design, arguments, and editorial decisions are the author's own.
 
 
 # References {.unnumbered}
