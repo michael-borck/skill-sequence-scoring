@@ -36,11 +36,12 @@ from bowling_analysis import score_traditional, score_world
 # ── Player Model ─────────────────────────────────────────────────────────────
 
 SKILL_TIERS = {
-    'Recreational': {'p_strike': 0.15, 'p_spare': 0.30, 'pin_mean': 5.0},
-    'Club':         {'p_strike': 0.30, 'p_spare': 0.50, 'pin_mean': 6.0},
-    'Competitive':  {'p_strike': 0.50, 'p_spare': 0.70, 'pin_mean': 7.0},
-    'Elite':        {'p_strike': 0.65, 'p_spare': 0.85, 'pin_mean': 7.5},
-    'Professional': {'p_strike': 0.75, 'p_spare': 0.90, 'pin_mean': 8.0},
+    'Recreational': {'p_strike': 0.04, 'p_spare': 0.27, 'pin_mean': 4.2},
+    'Club':         {'p_strike': 0.20, 'p_spare': 0.47, 'pin_mean': 5.5},
+    'Competitive':  {'p_strike': 0.40, 'p_spare': 0.64, 'pin_mean': 6.5},
+    'Elite':        {'p_strike': 0.55, 'p_spare': 0.77, 'pin_mean': 7.2},
+    'Professional': {'p_strike': 0.66, 'p_spare': 0.86, 'pin_mean': 7.8},
+    'Top 10':       {'p_strike': 0.73, 'p_spare': 0.92, 'pin_mean': 8.2},
 }
 
 

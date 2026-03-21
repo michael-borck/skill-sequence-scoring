@@ -59,7 +59,6 @@ def fig_tier_distributions():
         ax.axvline(np.mean(trad), color=TRAD_COLOR, linestyle='-', alpha=0.6, linewidth=1)
         ax.axvline(np.mean(world), color=WORLD_COLOR, linestyle='--', alpha=0.6, linewidth=1)
 
-    axes[5].set_visible(False)
     fig.suptitle('Score Distributions by Skill Tier', fontsize=14, y=1.02)
     fig.tight_layout()
     save_fig(fig, 'fig8_tier_distributions')

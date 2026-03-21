@@ -9,7 +9,7 @@ author:
         country: Australia
     email: michael.borck@curtin.edu.au
 abstract: |
-  Ten-pin bowling supports two distinct scoring systems: the traditional system, in which strikes and spares generate bonus points from subsequent balls, and the World Bowling current-frame system, in which each frame is scored independently. This paper presents a two-part analysis of both systems. In Part 1, we use exact combinatorial enumeration to characterise each system mathematically, verifying and extending prior work by Cooper and Kennedy (1990). We prove that World Bowling scoring is commutative with respect to frame order, demonstrate that traditional scoring's reward gradient for consecutive strikes is super-linear, and quantify the score range that arises from frame reordering alone. In Part 2, we conduct Monte Carlo simulation across five empirically calibrated skill tiers — from recreational (15% strike rate) to professional (75%) — and identify a crossover point at approximately 50% strike rate, above which traditional scoring provides substantially greater score spread than World Bowling. We do not argue that current-frame scoring lacks merit; for recreational participants, its simplicity and accessibility represent genuine improvements. Our argument is narrower: at the competitive and professional levels, where sequential skill distinguishes elite performers, current-frame scoring's commutativity property actively obscures the performance differences it should be measuring.
+  Ten-pin bowling supports two distinct scoring systems: the traditional system, in which strikes and spares generate bonus points from subsequent balls, and the World Bowling current-frame system, in which each frame is scored independently. This paper presents a two-part analysis of both systems. In Part 1, we use exact combinatorial enumeration to characterise each system mathematically, verifying and extending prior work by Cooper and Kennedy (1990). We prove that World Bowling scoring is commutative with respect to frame order, demonstrate that traditional scoring's reward gradient for consecutive strikes is super-linear, and quantify the score range that arises from frame reordering alone. In Part 2, we conduct Monte Carlo simulation across six empirically calibrated skill tiers — from recreational (4% strike rate) to Top 10 professional (73%) — and identify a crossover point at approximately 50% strike rate, above which traditional scoring provides substantially greater score spread than World Bowling. We do not argue that current-frame scoring lacks merit; for recreational participants, its simplicity and accessibility represent genuine improvements. Our argument is narrower: at the competitive and professional levels, where sequential skill distinguishes elite performers, current-frame scoring's commutativity property actively obscures the performance differences it should be measuring.
 keywords:
   - ten-pin bowling
   - scoring systems
@@ -200,17 +200,18 @@ This structure rewards the *completion* of a skill streak more than its initiati
 
 ## Player Model
 
-To ground the mathematical analysis in realistic playing conditions, we simulate bowling games across five empirically motivated skill tiers. Each player is characterised by three parameters: strike probability ($p_s$), spare conversion probability ($p_{sp}$), and mean first-ball pin count when not striking.
+To ground the mathematical analysis in realistic playing conditions, we simulate bowling games across six empirically motivated skill tiers. Each player is characterised by three parameters: strike probability ($p_s$), spare conversion probability ($p_{sp}$), and mean first-ball pin count when not striking.
 
-| Skill Tier | Strike Rate | Spare Rate | Pin Mean |
-|---|---|---|---|
-| Recreational | 15% | 30% | 5.0 |
-| Club | 30% | 50% | 6.0 |
-| Competitive | 50% | 70% | 7.0 |
-| Elite | 65% | 85% | 7.5 |
-| Professional | 75% | 90% | 8.0 |
+| Skill Tier | Strike Rate | Spare Rate | Pin Mean | Target Trad. Mean |
+|---|---|---|---|---|
+| Recreational | 4% | 27% | 4.2 | ~90 |
+| Club | 20% | 47% | 5.5 | ~130 |
+| Competitive | 40% | 64% | 6.5 | ~175 |
+| Elite | 55% | 77% | 7.2 | ~210 |
+| Professional | 66% | 86% | 7.8 | ~230 |
+| Top 10 | 73% | 92% | 8.2 | ~245 |
 
-: Skill tier parameters. Calibrated against published USBC statistics and PBA performance data [@yaari2012]. {#tbl-tiers}
+: Skill tier parameters. The recreational tier targets casual once-a-month bowlers (USBC league averages); the professional tier targets the PBA Tour season average of approximately 230; the Top 10 tier approximates the elite end of PBA performance [@yaari2012]. {#tbl-tiers}
 
 ## Simulation Protocol
 
@@ -220,11 +221,12 @@ For each skill tier, we simulate 50,000 complete games. Each ball is generated i
 
 | Skill Tier | Traditional Mean (SD) | World Bowling Mean (SD) |
 |---|---|---|
-| Recreational | 110 (19.4) | 125 (26.0) |
-| Club | 150 (24.4) | 172 (29.0) |
-| Competitive | 196 (27.1) | 221 (26.8) |
-| Elite | 229 (26.1) | 251 (22.1) |
-| Professional | 249 (24.7) | 267 (18.6) |
+| Recreational | 91 (14.2) | 95 (17.7) |
+| Club | 133 (21.2) | 149 (26.8) |
+| Competitive | 176 (25.8) | 200 (28.1) |
+| Elite | 209 (26.6) | 233 (25.1) |
+| Professional | 232 (25.7) | 253 (21.4) |
+| Top 10 | 246 (24.4) | 265 (18.6) |
 
 : Simulated score statistics by skill tier (50,000 games each). {#tbl-tierresults}
 
@@ -239,9 +241,9 @@ For each skill tier, we simulate 50,000 complete games. Each ball is generated i
 
 A critical observation emerges from the simulation: the standard deviation of scores under each system behaves differently as a function of player skill.
 
-Under World Bowling, score standard deviation peaks at low-to-moderate skill levels (SD $\approx$ 29 at club level) and then **decreases monotonically** as skill increases, reaching SD $\approx$ 18.6 at the professional level. This compression occurs because high-skill World Bowling games converge toward the maximum of 300 — with most frames scoring 30 (strike), the remaining variance comes only from occasional non-strikes.
+Under World Bowling, score standard deviation peaks at low-to-moderate skill levels (SD $\approx$ 28 at competitive level) and then **decreases monotonically** as skill increases, reaching SD $\approx$ 18.6 at the Top 10 level. This compression occurs because high-skill World Bowling games converge toward the maximum of 300 — with most frames scoring 30 (strike), the remaining variance comes only from occasional non-strikes.
 
-Under traditional scoring, standard deviation increases with skill through the competitive range and remains elevated (SD $\approx$ 24.7 at the professional level). This is because the compounding bonus structure amplifies the consequences of each non-strike — a single open frame in an otherwise perfect game costs substantially more under traditional scoring than under World Bowling, maintaining score spread even at elite levels.
+Under traditional scoring, standard deviation increases with skill through the competitive range and remains elevated (SD $\approx$ 25.7 at professional, $\approx$ 24.4 at Top 10). This is because the compounding bonus structure amplifies the consequences of each non-strike — a single open frame in an otherwise perfect game costs substantially more under traditional scoring than under World Bowling, maintaining score spread even at elite levels.
 
 ## The Crossover Point
 
@@ -307,7 +309,7 @@ Our argument is narrower: at the competitive and professional levels — where s
 
 ## Score Compression at the Elite Level
 
-The high-score compression shown in @tbl-compression, combined with the decreasing standard deviation under World Bowling at high skill levels (@fig-crossover), has practical consequences for competitive bowling. At the professional level, World Bowling's score SD of 18.6 compared to traditional's 24.7 means that World Bowling provides approximately 33% less score spread. When more distinct game sequences map to the same score, the score provides less information about which of two players performed better in any individual game.
+The high-score compression shown in @tbl-compression, combined with the decreasing standard deviation under World Bowling at high skill levels (@fig-crossover), has practical consequences for competitive bowling. At the Top 10 professional level, World Bowling's score SD of 18.6 compared to traditional's 24.4 means that World Bowling provides approximately 24% less score spread. At the professional tier more broadly (SD 21.4 vs 25.7), the gap is similar. When more distinct game sequences map to the same score, the score provides less information about which of two players performed better in any individual game.
 
 ## Recency Bias and the Perception of Unfairness
 
@@ -328,7 +330,7 @@ We have demonstrated, through exact combinatorial analysis and skill-weighted si
 
 2. **Traditional scoring has a compounding reward gradient for consecutive strikes.** Each strike in a string is worth more than an isolated strike, creating a non-linear incentive for sustained excellence. World Bowling scoring is linear — every strike is worth the same regardless of context.
 
-3. **The scoring systems' discriminating power crosses over at approximately 50% strike rate.** Below this threshold, World Bowling's wider score distribution provides adequate discrimination and its simplicity is a net benefit. Above it, traditional scoring provides substantially greater score spread — 33% more at the professional level — precisely where discrimination matters most.
+3. **The scoring systems' discriminating power crosses over at approximately 50% strike rate.** Below this threshold, World Bowling's wider score distribution provides adequate discrimination and its simplicity is a net benefit. Above it, traditional scoring provides substantially greater score spread — over 30% more at the Top 10 professional level — precisely where discrimination matters most.
 
 4. **The distinction matters most within skill tiers, not between them.** Both systems adequately separate recreational players from professionals. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes — the skill that defines professional bowling.
 
