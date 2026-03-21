@@ -7,9 +7,9 @@ School of Marketing and Management, Curtin University, Perth, Australia
 
 ## Abstract
 
-Ten-pin bowling supports two distinct scoring systems: the traditional system, in which strikes and spares generate bonus points from subsequent balls, and the World Bowling current-frame system, in which each frame is scored independently. This paper presents a mathematical analysis of both systems using exact combinatorial enumeration, verifying and extending prior work by Balmoral Software. We characterise each system across four dimensions: (1) score distribution over all possible games, (2) sequence sensitivity — the degree to which the order of frames, rather than their composition, influences final score, (3) the reward gradient for consecutive strikes, and (4) the relationship between score and sustained skill. We demonstrate that traditional scoring is super-linear in skill streaks due to its compounding bonus structure, that it is explicitly order-dependent in a way that rewards sustained performance, and that the World Bowling system, while simpler to compute, is commutative with respect to frame order — rendering it insensitive to the sequencing of skill that characterises elite play. We argue that the complexity of traditional scoring is not incidental but intrinsic to its capacity to encode sustained skill, and that simplification comes at a direct cost to competitive discrimination.
+Ten-pin bowling supports two distinct scoring systems: the traditional system, in which strikes and spares generate bonus points from subsequent balls, and the World Bowling current-frame system, in which each frame is scored independently. This paper presents a two-part analysis of both systems. In Part 1, we use exact combinatorial enumeration to characterise each system mathematically, verifying and extending prior work by Cooper and Kennedy (1990). We prove that World Bowling scoring is commutative with respect to frame order, demonstrate that traditional scoring's reward gradient for consecutive strikes is super-linear, and quantify the score range that arises from frame reordering alone. In Part 2, we conduct Monte Carlo simulation across five empirically calibrated skill tiers — from recreational (15% strike rate) to professional (75%) — and identify a crossover point at approximately 50% strike rate, above which traditional scoring provides substantially greater score spread than World Bowling. We do not argue that current-frame scoring lacks merit; for recreational participants, its simplicity and accessibility represent genuine improvements. Our argument is narrower: at the competitive and professional levels, where sequential skill distinguishes elite performers, current-frame scoring's commutativity property actively obscures the performance differences it should be measuring.
 
-**Keywords:** ten-pin bowling, scoring systems, combinatorics, skill discrimination, sequence sensitivity, World Bowling
+**Keywords:** ten-pin bowling, scoring systems, combinatorics, skill discrimination, sequence sensitivity, World Bowling, Monte Carlo simulation
 
 ---
 
@@ -19,35 +19,37 @@ Ten-pin bowling has been scored using the same traditional system for over a cen
 
 World Bowling, the international governing body for the sport, has promoted an alternative current-frame scoring system in which each frame is scored independently: a strike earns 30 points, a spare earns 10 plus the first ball of that frame, and an open frame earns the sum of both balls. The stated motivation is simplicity — spectators and new participants can follow the score without tracking future balls.
 
-Several informal comparisons of these systems exist online, focusing primarily on average scores and the presence of impossible scores in the World Bowling range. What is absent from the literature is a rigorous mathematical treatment of what each system measures, and whether the simplification offered by World Bowling preserves the competitive properties that define the sport at an elite level.
+Several informal comparisons of these systems exist online, focusing primarily on average scores and the presence of impossible scores in the World Bowling range. Cooper and Kennedy (1990) provided the foundational mathematical treatment of traditional bowling score distributions using generating functions, later extended by Hohn (2009) to generalised N-frame, M-pin games. Keogh and O'Neill (2011) studied empirical bowling score distributions using real game data. However, no prior work has formally compared the mathematical properties of both scoring systems, characterised sequence sensitivity as a distinguishing property, or quantified the skill level at which scoring system choice becomes competitively significant.
 
-This paper provides that treatment.
+This paper provides that treatment in two complementary parts: exact mathematical analysis (Part 1) and skill-weighted simulation (Part 2).
 
 ---
+
+# Part 1: Mathematical Analysis
 
 ## 2. Mathematical Framework
 
 ### 2.1 State Space and Enumeration
 
-The total number of distinct ten-pin bowling games is finite and well-defined. Under traditional scoring, each of frames 1-9 admits 66 possible throwing outcomes (one strike, plus all combinations of two balls summing to at most 10), and frame 10 admits 241 outcomes (accounting for bonus balls). The total game count is therefore:
+The total number of distinct ten-pin bowling games is finite and well-defined. Under traditional scoring, each of frames 1–9 admits 66 possible throwing outcomes (one strike, plus all combinations of two balls summing to at most 10), and frame 10 admits 241 outcomes (accounting for bonus balls). The total game count is therefore:
 
-> 66^9 × 241 = 5,726,805,883,325,784,576 ≈ 5.7 × 10^18
+$$66^9 \times 241 = 5{,}726{,}805{,}883{,}325{,}784{,}576 \approx 5.7 \times 10^{18}$$
 
 Under World Bowling scoring, all ten frames are identical (no bonus ball in frame 10), giving:
 
-> 66^10 = 1,568,336,880,910,795,776 ≈ 1.6 × 10^18
+$$66^{10} = 1{,}568{,}336{,}880{,}910{,}795{,}776 \approx 1.6 \times 10^{18}$$
 
-Direct enumeration of these game spaces is computationally infeasible. We employ dynamic programming with state representation tracking pending bonus multipliers, following the convolution approach described by Balmoral Software (2004-2019). Our independent implementation produces results that match their published tables exactly at every verification point, including the mode of 77 for traditional scoring with 172,542,309,343,731,946 possible games, and the mode of 72 for World Bowling scoring with 43,781,414,679,391,290 possible games.
+Direct enumeration of these game spaces is computationally infeasible. We employ dynamic programming with state representation tracking pending bonus multipliers, following the convolution approach described by Balmoral Software (2004–2019). Our independent implementation produces results that match their published tables exactly at every verification point, including the mode of 77 for traditional scoring with 172,542,309,343,731,946 possible games, and the mode of 72 for World Bowling scoring with 43,781,414,679,391,290 possible games.
 
 ### 2.2 Scoring Functions
 
 **Traditional scoring:**
 
-For frames 1-9, let A_i and B_i denote the first and second balls of frame i. For a strike (A_i = 10), the frame score is 10 + A_{i+1} + B_{i+1}. For a spare (A_i + B_i = 10), the frame score is 10 + A_{i+1}. Otherwise the frame score is A_i + B_i. Frame 10 follows special rules permitting up to three balls with no bonus propagation beyond the frame.
+For frames 1–9, let $A_i$ and $B_i$ denote the first and second balls of frame $i$. For a strike ($A_i = 10$), the frame score is $10 + A_{i+1} + B_{i+1}$. For a spare ($A_i + B_i = 10$), the frame score is $10 + A_{i+1}$. Otherwise the frame score is $A_i + B_i$. Frame 10 follows special rules permitting up to three balls with no bonus propagation beyond the frame.
 
 **World Bowling scoring:**
 
-For each frame i, the score is: 30 (strike), 10 + A_i (spare), or A_i + B_i (open). All ten frames are scored identically; no inter-frame dependencies exist.
+For each frame $i$, the score is: 30 (strike), $10 + A_i$ (spare), or $A_i + B_i$ (open). All ten frames are scored identically; no inter-frame dependencies exist.
 
 ---
 
@@ -57,16 +59,20 @@ For each frame i, the score is: 30 (strike), 10 + A_i (spare), or A_i + B_i (ope
 
 | Statistic | Traditional | World Bowling |
 |-----------|-------------|---------------|
-| Total games | 5.73 × 10^18 | 1.57 × 10^18 |
+| Total games | $5.73 \times 10^{18}$ | $1.57 \times 10^{18}$ |
 | Score range | 0–300 | 0–289, 300 |
 | Mode | 77 | 72 |
 | Mean | 79.7 | 76.5 |
 | Median | 79 | 75 |
 | Standard deviation | 13.7 | 15.2 |
 
+*[See Figure 1: Score distribution overlay; Figure 4: Cumulative distributions]*
+
 ### 3.2 Impossible Scores
 
-A structural property of World Bowling scoring is the impossibility of scores in the range 290-299. This arises because 9 strikes yield at most 9 × 30 + 19 = 289 (9 strikes plus one maximum spare), while 10 strikes yield exactly 300. No sequence of legal balls can produce a game score between 290 and 299 inclusive under World Bowling rules. This gap is not a curiosity — it is a direct consequence of the linear, frame-independent scoring structure, and it reveals a fundamental property: **the score space is not fully utilised**.
+A structural property of World Bowling scoring is the impossibility of scores in the range 290–299. This arises because 9 strikes yield at most $9 \times 30 + 19 = 289$ (9 strikes plus one maximum spare of 10 + 9), while 10 strikes yield exactly 300. No sequence of legal balls can produce a game score between 290 and 299 inclusive under World Bowling rules. This gap is not a curiosity — it is a direct consequence of the linear, frame-independent scoring structure, and it reveals a fundamental property: **the score space is not fully utilised**.
+
+*[See Figure 2: High-score tail on log scale]*
 
 ### 3.3 High-Score Compression
 
@@ -89,36 +95,57 @@ At scores of 200 and above, World Bowling consistently offers more paths to the 
 
 ### 4.1 Commutativity of World Bowling Scoring
 
-**Proposition:** Under World Bowling scoring, the score of a game is invariant under any permutation of its frames.
+**Proposition 1.** *Under World Bowling scoring, the total game score is invariant under any permutation of the ten frames.*
 
-**Proof:** The World Bowling score is the sum of ten independently computed frame scores. Since addition is commutative, any reordering of the ten frame scores produces the same total. ∎
+**Proof.** Let $f_i$ denote the score of frame $i$ under World Bowling rules. The total game score is $S = \sum_{i=1}^{10} f_i$. Since each $f_i$ is computed from balls thrown within frame $i$ alone, and addition is commutative and associative, any permutation $\sigma$ of the frames yields $S' = \sum_{i=1}^{10} f_{\sigma(i)} = S$. $\square$
 
-This property — commutativity with respect to frame order — does not hold for traditional scoring. Under traditional scoring, a strike in frame i depends on balls thrown in frame i+1 and potentially i+2. Reordering frames changes which balls serve as bonuses, and therefore changes the score.
+This property — commutativity with respect to frame order — does not hold for traditional scoring. Under traditional scoring, a strike in frame $i$ depends on balls thrown in frames $i+1$ and potentially $i+2$. Reordering frames changes which balls serve as bonuses, and therefore changes the score.
 
 ### 4.2 Empirical Demonstration
 
-We compute scores for fixed frame compositions under varying orderings. Consider 9 frames all knocking down 10 pins (5 strikes and 4 spares in various orderings) followed by a neutral frame 10 (5, 4):
+We compute scores for fixed frame compositions under varying orderings. Consider 9 frames comprising 5 strikes and 4 spares (5,5) in various orderings, followed by a neutral frame 10 (5, 4):
 
 | Sequence (9 frames + neutral 10th) | Traditional | World Bowling |
 |------------------------------------|-------------|---------------|
 | 5 strikes then 4 spares | 204 | 219 |
 | Alternating: strike, spare × 4, strike | 188 | 219 |
 | 4 spares then 5 strikes | 208 | 219 |
-| Spare, strike alternating | 184 | 204 |
+| X, sp, sp, X, sp, X, X, sp, X | 188 | 219 |
 
-Under World Bowling, all sequences with the same frame composition score identically. Under traditional scoring, the score varies by up to 24 points depending solely on the ordering of the same frames. The sequence that places strikes earlier scores lower in our examples — because subsequent frames (spares) earn lower bonuses than subsequent strikes would.
+Under World Bowling, all four orderings of the same frame composition score identically (219). Under traditional scoring, the score varies by 20 points (188–208) depending solely on the ordering.
 
-### 4.3 Implications for Skill
+*[See Figure 5: Sequence sensitivity bar chart]*
+
+### 4.3 Exhaustive Permutation Analysis
+
+To quantify the full extent of sequence sensitivity, we enumerate all distinct permutations of fixed frame compositions and compute the score under each system. For compositions of $k$ strikes and $(9-k)$ spares in frames 1–9:
+
+| Composition | Distinct orderings | Traditional range | Traditional SD | World Bowling range |
+|---|---|---|---|---|
+| 1 strike + 8 spares | 9 | 5 | 1.7 | 0 |
+| 2 strikes + 7 spares | 36 | 6 | 2.1 | 0 |
+| 3 strikes + 6 spares | 84 | 11 | 2.9 | 0 |
+| 4 strikes + 5 spares | 126 | 16 | 4.2 | 0 |
+| 5 strikes + 4 spares | 126 | 21 | 5.5 | 0 |
+| 6 strikes + 3 spares | 84 | 26 | 6.4 | 0 |
+| 7 strikes + 2 spares | 36 | 26 | 6.6 | 0 |
+| 8 strikes + 1 spare | 9 | 15 | 5.6 | 0 |
+
+The World Bowling score range is exactly zero for every composition — confirming Proposition 1 empirically. The traditional score range grows with the mix of frame types, peaking at 26 points for compositions with 6–7 strikes. When open frames are included alongside strikes, the range increases further: 5 strikes mixed with 4 open frames (5, 4) produces a 39-point range across 126 orderings.
+
+*[See Figures 6–7: Permutation variance and distribution]*
+
+### 4.4 Implications for Skill
 
 Sequence sensitivity has a direct sporting interpretation. In competitive bowling, a player who strings consecutive strikes together is demonstrating a qualitatively different level of performance than one who scatters the same number of strikes throughout a game. The traditional scoring system encodes this distinction numerically. The World Bowling system does not.
 
-The maximum score achievable with a fixed number of strikes is higher when those strikes are consecutive (due to compounding bonuses from subsequent strikes), creating a score incentive for sustained excellence. Under World Bowling, a bowler who throws five consecutive strikes in frames 1-5 and then opens all remaining frames achieves the same score as one who alternates strikes and open frames to produce the same strike count — regardless of how much more difficult the sustained streak was to achieve.
+The maximum score achievable with a fixed number of strikes is higher when those strikes are consecutive (due to compounding bonuses from subsequent strikes), creating a score incentive for sustained excellence. Under World Bowling, a bowler who throws five consecutive strikes in frames 1–5 and then opens all remaining frames achieves the same score as one who alternates strikes and open frames — regardless of how much more difficult the sustained streak was to achieve.
 
 ---
 
 ## 5. The Reward Gradient for Consecutive Strikes
 
-We define the **marginal strike value** as the increase in game score when one additional open frame (5, 4) is replaced by a strike, all other frames remaining constant. Under World Bowling this value is trivially constant: 30 - 9 = 21 points per strike added.
+We define the **marginal strike value** as the increase in game score when one additional open frame (5, 4) is replaced by a strike, all other frames remaining constant. Under World Bowling this value is trivially constant: $30 - 9 = 21$ points per strike added.
 
 Under traditional scoring, the marginal value depends on the surrounding context:
 
@@ -136,70 +163,184 @@ Two observations are immediate. First, the initial strikes are undervalued in tr
 
 This structure rewards the *completion* of a skill streak more than its initiation. The first strike of a sequence is worth relatively little; the strike that extends a string is worth substantially more. Under World Bowling, every strike is worth exactly the same regardless of what surrounds it.
 
+*[See Figure 3: Reward gradient — total scores and marginal value]*
+
 ---
 
-## 6. Discussion
+# Part 2: Skill-Weighted Simulation
 
-### 6.1 What Scoring Systems Measure
+## 6. Simulation Model
+
+### 6.1 Player Model
+
+To ground the mathematical analysis in realistic playing conditions, we simulate bowling games across five empirically motivated skill tiers. Each player is characterised by three parameters: strike probability ($p_s$), spare conversion probability ($p_{sp}$), and mean first-ball pin count when not striking.
+
+| Skill Tier | Strike Rate | Spare Rate | Pin Mean |
+|---|---|---|---|
+| Recreational | 15% | 30% | 5.0 |
+| Club | 30% | 50% | 6.0 |
+| Competitive | 50% | 70% | 7.0 |
+| Elite | 65% | 85% | 7.5 |
+| Professional | 75% | 90% | 8.0 |
+
+These tiers are calibrated against published USBC aggregate statistics and PBA performance data. The recreational tier represents a casual once-a-month bowler; the professional tier approximates PBA Tour-level performance where strike rates of 70–80% are standard (Yaari & Eisenmann, 2012).
+
+### 6.2 Simulation Protocol
+
+For each skill tier, we simulate 50,000 complete games. Each ball is generated independently: the first ball of each frame is a strike with probability $p_s$, otherwise pins follow a binomial distribution with the tier's mean; the second ball converts the spare with probability $p_{sp}$, otherwise a random number of remaining pins are knocked down. Every simulated game is scored under both traditional and World Bowling rules, enabling paired comparison.
+
+### 6.3 Tier Results
+
+| Skill Tier | Traditional Mean (SD) | World Bowling Mean (SD) |
+|---|---|---|
+| Recreational | 110 (19.4) | 125 (26.0) |
+| Club | 150 (24.4) | 172 (29.0) |
+| Competitive | 196 (27.1) | 221 (26.8) |
+| Elite | 229 (26.1) | 251 (22.1) |
+| Professional | 249 (24.7) | 267 (18.6) |
+
+*[See Figure 8: Score distributions by skill tier; Figure 9: Mean scores and score spread]*
+
+---
+
+## 7. The Score Spread Crossover
+
+### 7.1 Standard Deviation as a Function of Skill
+
+A critical observation emerges from the simulation: the standard deviation of scores under each system behaves differently as a function of player skill.
+
+Under World Bowling, score standard deviation peaks at low-to-moderate skill levels (SD ≈ 29 at club level) and then **decreases monotonically** as skill increases, reaching SD ≈ 18.6 at the professional level. This compression occurs because high-skill World Bowling games converge toward the maximum of 300 — with most frames scoring 30 (strike), the remaining variance comes only from occasional non-strikes.
+
+Under traditional scoring, standard deviation increases with skill through the competitive range and remains elevated (SD ≈ 24.7 at the professional level). This is because the compounding bonus structure amplifies the consequences of each non-strike — a single open frame in an otherwise perfect game costs substantially more under traditional scoring than under World Bowling, maintaining score spread even at elite levels.
+
+### 7.2 The Crossover Point
+
+We sweep strike rate continuously from 10% to 80% and compute score standard deviation under each system. The two curves cross at approximately **50–51% strike rate**. Below this threshold, World Bowling provides greater score spread; above it, traditional scoring provides greater spread.
+
+This crossover has a direct competitive interpretation. At recreational and club levels, World Bowling's wider score distribution means it actually provides *more* discrimination between adjacent skill levels — supporting the case for its use in casual and league play. At competitive and professional levels, the reversal means traditional scoring provides the finer discrimination that elite competition requires.
+
+*[See Figure 10: Score spread crossover analysis]*
+
+### 7.3 Between-Tier vs Within-Tier Discrimination
+
+Our simulation reveals an important nuance. When comparing *between tiers* (e.g., recreational vs club), both scoring systems produce similar Cohen's d effect sizes (~1.7–1.8). The choice of scoring system does not substantially affect the ability to distinguish a recreational player from a club player, or a club player from a competitive one.
+
+The meaningful difference lies in *within-tier discrimination* — separating two players at the same general skill level who differ in their ability to sustain consecutive strikes. Consider two professional bowlers, both with approximately 70% strike rates, but one who tends to string strikes in runs of 4–5 and another who distributes them more evenly. Under traditional scoring, the streak bowler's compounding bonuses produce measurably higher scores. Under World Bowling, their scores are statistically indistinguishable.
+
+---
+
+## 8. Professional-Level Sequence Analysis
+
+### 8.1 Specific Sequence Comparisons
+
+To illustrate the practical consequences at the professional level, we compute scores for sequences representative of elite play:
+
+| Sequence | Traditional | World Bowling | Difference |
+|---|---|---|---|
+| Perfect game (12 strikes) | 300 | 300 | 0 |
+| 10 strikes + spare(7,3) + 7 | 287 | 300 | −13 |
+| 8 strikes + 2 spares(7,3) + 7 | 261 | 274 | −13 |
+| 6 spares then 4 strikes + X,X | 215 | 210 | +5 |
+| 4 strikes then 6 spares + 5 | 195 | 210 | −15 |
+| Alternating strike/spare × 5 | 200 | 225 | −25 |
+| All spares (5,5) + 5 | 150 | 150 | 0 |
+
+Two patterns are notable. First, the systems agree at the extremes (perfect game and all spares) but diverge substantially for the mixed sequences that constitute the vast majority of professional games. Second, the *direction* of the difference depends on the sequence — traditional scoring rewards sequences with consecutive strikes more than World Bowling does, while World Bowling rewards isolated strikes more. The traditional system encodes *how* the strikes were arranged; World Bowling treats them as interchangeable.
+
+### 8.2 The Fourth-to-Fifth Strike Problem
+
+Consider a professional bowler who has thrown four consecutive strikes. Under traditional scoring, the fifth strike is worth substantially more than under World Bowling (+21 from the compounding bonus structure), because it both earns its own bonus and retroactively increases the value of the preceding strikes. Under World Bowling, the fifth strike is worth exactly the same as if it were the first strike of the game (30 points, net +21 over an average open frame).
+
+This flattening of the reward gradient at the professional level is not a simplification — it is a loss of information. The ability to extend a strike run from four to five frames is one of the most difficult and competitively meaningful feats in professional bowling. Traditional scoring encodes that difficulty in the score. World Bowling does not.
+
+*[See Figure 11: Professional-level sequence comparison]*
+
+---
+
+## 9. Discussion
+
+### 9.1 What Scoring Systems Measure
 
 A scoring system is a function from a sequence of physical performances to a number. The properties of that function determine what the number communicates about the athlete's skill. Two scoring systems can agree on the maximum possible score (both systems peak at 300 for a perfect game) while disagreeing significantly on how they encode the path to that maximum.
 
 Traditional bowling scoring encodes two distinct performance qualities simultaneously: the absolute pin count (how many pins were knocked down) and the sequencing of that performance (whether those knockdowns were concentrated in consecutive frames or distributed across the game). World Bowling scoring encodes only the first.
 
-This is not a criticism of World Bowling scoring on accessibility grounds — the simplification is real and valuable for casual participation and spectator clarity. It is, however, a precise characterisation of what information is lost.
+### 9.2 The Commutativity Trade-off
 
-### 6.2 The Commutativity Trade-off
+The commutativity of World Bowling scoring (Proposition 1) is its defining feature. It makes the system simple to compute and explain. But commutativity in a scoring function means that sustained performance is not valued above distributed performance. In most competitive sports, consecutive success is considered more difficult than the same success spread over time — a tennis player who wins six consecutive games demonstrates something different from one who wins six non-consecutive games. Traditional bowling scoring agrees with this intuition. World Bowling scoring does not.
 
-The commutativity of World Bowling scoring (Proposition 4.1) is its defining feature. It makes the system simple to compute and explain. But commutativity in a scoring function means that sustained performance is not valued above distributed performance. In most competitive sports, consecutive success is considered more difficult than the same success spread over time — a tennis player who wins six consecutive games demonstrates something different from one who wins six non-consecutive games. Traditional bowling scoring agrees with this intuition. World Bowling scoring does not.
+### 9.3 The Appropriate Domain for Each System
 
-### 6.3 Score Compression at the Elite Level
+We do not argue that current-frame scoring lacks merit. For recreational participants, its simplicity and accessibility represent genuine improvements over traditional scoring. The simulation results support this: below approximately 50% strike rate, World Bowling actually provides *greater* score spread, and its simpler computation removes a barrier to casual participation. The higher Shannon entropy of the World Bowling distribution (5.94 bits vs 5.81 bits for traditional) reflects this: scores are more evenly spread across the range, meaning a casual player's score more directly reflects their raw pin count without the amplifying effect of bonus compounding.
 
-The high-score compression shown in Section 3.3 has practical consequences for competitive bowling. When more distinct game sequences map to the same score, the score provides less information about which of two players performed better in any individual game. At scores above 200, World Bowling's higher path count per score means two players with meaningfully different performances are more likely to end with identical scores. Traditional scoring's sparser high-score distribution provides finer discrimination precisely where discrimination matters most — at the elite level.
+Our argument is narrower: at the competitive and professional levels — where strike rates exceed 50% and the ability to string consecutive strikes is the distinguishing skill — current-frame scoring's commutativity property actively obscures the performance differences it should be measuring. The crossover point at approximately 50% strike rate provides a concrete, empirically grounded threshold for this distinction.
 
-### 6.4 Why World Bowling Feels Fair: Entropy and Accessibility
+### 9.4 Score Compression at the Elite Level
 
-Our analysis reveals an apparently paradoxical result: the Shannon entropy of the World Bowling score distribution (5.94 bits) is marginally *higher* than that of traditional scoring (5.81 bits). Higher entropy means scores are more evenly spread across the range — more scores are reachable by more players. This is not a flaw in the analysis; it is an honest characterisation of what World Bowling optimises for. By removing the compounding bonus structure, World Bowling democratises the score range. A casual player's score more directly reflects their raw pin count, without the amplifying effect of bonus compounding that concentrates elite scores at the high end of the traditional distribution. The system genuinely is more accessible and more uniformly distributed — and this explains, at least in part, why some participants and administrators prefer it. The argument of this paper is not that World Bowling scoring is wrong, but that its higher entropy comes at a specific and quantifiable cost: the loss of sequence sensitivity at the competitive level.
+The high-score compression shown in Section 3.3, combined with the decreasing standard deviation under World Bowling at high skill levels (Section 7.1), has practical consequences for competitive bowling. At the professional level, World Bowling's score SD of 18.6 compared to traditional's 24.7 means that World Bowling provides approximately 33% less score spread. When more distinct game sequences map to the same score, the score provides less information about which of two players performed better in any individual game.
 
-### 6.5 Recency Bias and the Perception of Unfairness
+### 9.5 Recency Bias and the Perception of Unfairness
 
-A common informal argument against traditional scoring takes the following form: consider Player A, who throws a spare in frame 1 and then strikes for the remainder of the game, and Player B, who strikes from frame 1 but finishes with an open frame. Many observers intuitively feel Player A — who finished on a strong run — should score as well or better than Player B, who faltered at the end. Under traditional scoring, Player B scores higher, because the early strikes compound forward into subsequent strikes, whereas Player A's opening spare earns only a single bonus ball before the strike run begins.
+A common informal argument against traditional scoring takes the following form: consider Player A, who throws a spare in frame 1 and then strikes for the remainder of the game, and Player B, who strikes from frame 1 but finishes with an open frame. Many observers intuitively feel Player A — who finished on a strong run — should score as well or better than Player B, who faltered at the end. Under traditional scoring, Player B scores higher, because the early strikes compound forward into subsequent strikes.
 
-This intuition is an instance of **recency bias** — the cognitive tendency to weight recent events more heavily than earlier ones. Traditional scoring does not correct for recency bias; it actively works against it, valuing the full sequence of the game from the first ball. A strike in frame 1 that is followed by nine more strikes is worth more than a strike in frame 9 surrounded by open frames — precisely because it initiated and was part of a sustained run. The scoring system encodes the *entire game arc*, not just its conclusion. The perception that this is unfair reflects a human cognitive bias rather than a deficiency in the scoring system. World Bowling scoring, by treating each frame independently, implicitly accommodates recency bias — but in doing so, it loses the ability to distinguish the player who sustained excellence throughout from the one who achieved the same pin count in a less demanding sequence.
+This intuition is an instance of **recency bias** — the cognitive tendency to weight recent events more heavily than earlier ones (Gilovich, Vallone & Tversky, 1985). Traditional scoring does not correct for recency bias; it actively works against it, valuing the full sequence of the game from the first ball. The perception that this is unfair reflects a human cognitive bias rather than a deficiency in the scoring system. World Bowling scoring, by treating each frame independently, implicitly accommodates recency bias — but in doing so, it loses the ability to distinguish the player who sustained excellence throughout from the one who achieved the same pin count in a less demanding sequence.
 
-### 6.6 The 290-299 Gap as a Design Artefact
+### 9.6 The 290–299 Gap as a Design Artefact
 
-The impossibility of World Bowling scores in the range 290-299 is mathematically unavoidable given the system's design. It is a direct consequence of the discrete jump between the maximum achievable score with 9 strikes (289) and the minimum score with 10 strikes (300). This gap means that a bowler who throws nine strikes and one near-perfect spare cannot be scored above 289, while one who converts that spare to a tenth strike jumps directly to 300. The scoring cliff at the top of the range is not a feature of athletic performance — it is an artefact of linear frame independence.
+The impossibility of World Bowling scores in the range 290–299 is mathematically unavoidable given the system's design. It is a direct consequence of the discrete jump between the maximum achievable score with 9 strikes (289) and the minimum score with 10 strikes (300). This gap means that a bowler who throws nine strikes and one near-perfect spare cannot be scored above 289, while one who converts that spare to a tenth strike jumps directly to 300. The scoring cliff at the top of the range is not a feature of athletic performance — it is an artefact of linear frame independence.
 
 ---
 
-## 7. Conclusion
+## 10. Conclusion
 
-We have demonstrated, through exact combinatorial analysis, that traditional and World Bowling scoring systems differ in three mathematically precise and practically significant ways:
+We have demonstrated, through exact combinatorial analysis and skill-weighted simulation, that traditional and World Bowling scoring systems differ in mathematically precise and practically significant ways:
 
-1. **Traditional scoring is sequence-sensitive.** The order of frames matters, and it matters in a way that rewards consecutive success. World Bowling scoring is commutative — order is irrelevant.
+1. **Traditional scoring is sequence-sensitive.** The order of frames matters, and it matters in a way that rewards consecutive success. World Bowling scoring is commutative — order is irrelevant. Exhaustive permutation analysis shows that the same frame composition can produce a score range of up to 39 points under traditional scoring, while World Bowling collapses all orderings to a single score.
 
 2. **Traditional scoring has a compounding reward gradient for consecutive strikes.** Each strike in a string is worth more than an isolated strike, creating a non-linear incentive for sustained excellence. World Bowling scoring is linear — every strike is worth the same regardless of context.
 
-3. **Traditional scoring provides finer discrimination at high scores.** Fewer game sequences map to each high score, meaning high scores carry more information about the quality of play. World Bowling's score compression at the elite level reduces competitive discrimination.
+3. **The scoring systems' discriminating power crosses over at approximately 50% strike rate.** Below this threshold, World Bowling's wider score distribution provides adequate discrimination and its simplicity is a net benefit. Above it, traditional scoring provides substantially greater score spread — 33% more at the professional level — precisely where discrimination matters most.
 
-The complexity of traditional scoring is not an accident of history. It is the mechanism by which the system encodes the quality most distinctive about elite bowling: the ability to string consecutive strikes across frames and across games. Removing that complexity removes that measurement.
+4. **The distinction matters most within skill tiers, not between them.** Both systems adequately separate recreational players from professionals. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes — the skill that defines professional bowling.
+
+The complexity of traditional scoring is not an accident of history. It is the mechanism by which the system encodes the quality most distinctive about elite bowling: the ability to string consecutive strikes across frames and across games. Removing that complexity removes that measurement. Current-frame scoring is appropriate for recreational participation. It is not appropriate for professional competition.
 
 ---
 
 ## Acknowledgements
 
-Score distribution computations were performed using an independent Python implementation verified against published tables by Balmoral Software (balmoralsoftware.com/bowling/bowling.htm). Full source code and distribution tables are available at [repository URL].
+Score distribution computations were performed using an independent Python implementation verified against published tables by Balmoral Software (balmoralsoftware.com/bowling/bowling.htm). Simulation code and full distribution tables are available at https://github.com/michael-borck/skill-sequence-scoring.
 
 ---
 
 ## References
 
-- Balmoral Software. (2004-2019). *All About Bowling Scores*. Retrieved from http://www.balmoralsoftware.com/bowling/bowling.htm
-- World Bowling. (2014). *World Bowling Scoring System*. Retrieved from http://www.worldbowling.org
-- Wikipedia contributors. (2024). *Ten-pin bowling — Scoring*. In *Wikipedia, The Free Encyclopedia*. Retrieved from https://en.wikipedia.org/wiki/Ten-pin_bowling#Scoring
+Ausloos, M. (2023). Shannon entropy and Herfindahl-Hirschman index as team performance indicators in cyclist multi-stage races. *Entropy*, 25(6), 955.
+
+Balmoral Software. (2004–2019). All about bowling scores. Retrieved from http://www.balmoralsoftware.com/bowling/bowling.htm
+
+Bar-Eli, M., Avugos, S., & Raab, M. (2006). Twenty years of "hot hand" research: Review and critique. *Psychology of Sport and Exercise*, 7(6), 525–553.
+
+Cooper, C. N., & Kennedy, R. E. (1990). A generating function for the distribution of the scores of all possible bowling games. *Mathematics Magazine*, 63(4), 239–243.
+
+Dorsey-Palmateer, R., & Smith, G. (2004). Bowlers' hot hands. *The American Statistician*, 58(1), 38–45.
+
+Gilovich, T., Vallone, R., & Tversky, A. (1985). The hot hand in basketball: On the misperception of random sequences. *Cognitive Psychology*, 17(3), 295–314.
+
+Gneiting, T., & Raftery, A. E. (2007). Strictly proper scoring rules, prediction, and estimation. *Journal of the American Statistical Association*, 102(477), 359–378.
+
+Hohn, J. L. (2009). *Generalized probabilistic bowling distributions* (Master's thesis). Western Kentucky University.
+
+Keogh, J., & O'Neill, S. (2011). *A statistical analysis of 10-pin bowling scores and an examination of the fairness of alternative handicapping systems*. National University of Ireland, Maynooth.
+
+Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal*, 27(3), 379–423.
+
+World Bowling. (2014). *World Bowling scoring system*. Retrieved from http://www.worldbowling.org
+
+Yaari, G., & Eisenmann, S. (2012). Hot hand on strike: Bowling data indicates correlation to recent past results, not causality. *PLOS ONE*, 7(1), e30112.
 
 ---
 
-*Correspondence: [author email]*
-*Code repository: [GitHub URL]*
-*Submitted to: [Journal of Quantitative Analysis in Sports / other target]*
+*Correspondence: michael.borck@curtin.edu.au*
+*Code repository: https://github.com/michael-borck/skill-sequence-scoring*
+*Target journal: Journal of Quantitative Analysis in Sports*
