@@ -14,7 +14,7 @@ import numpy as np
 
 from bowling_simulation import (
     SKILL_TIERS, simulate_games, simulate_games_momentum,
-    crossover_analysis, score_separation
+    simulate_games_markov, crossover_analysis, score_separation
 )
 from plot_style import (
     TRAD_COLOR, WORLD_COLOR, TRAD_FILL, WORLD_FILL,
@@ -270,6 +270,55 @@ def fig_momentum_comparison():
     save_fig(fig, 'fig12_momentum_comparison')
 
 
+def fig_model_comparison():
+    """
+    Compare all three simulation models: independent, momentum, Markov chain.
+    Shows that more realistic models amplify the traditional scoring advantage.
+    """
+    tier_names = list(SKILL_TIERS.keys())
+    n_games = 30_000
+
+    models = {
+        'Independent': lambda p: simulate_games(
+            n_games, p['p_strike'], p['p_spare'], p['pin_mean']),
+        'Momentum': lambda p: simulate_games_momentum(
+            n_games, p['p_strike'], p['p_spare'], p['pin_mean']),
+        'Markov + spare\ndifficulty': lambda p: simulate_games_markov(
+            n_games, p['p_strike'], p['p_spare'], p['pin_mean']),
+    }
+
+    # Compute SD gap (trad - world) for each model at each tier
+    gaps = {m: [] for m in models}
+    for name, params in SKILL_TIERS.items():
+        for mname, mfn in models.items():
+            t, w = mfn(params)
+            gap = np.std(t) - np.std(w)
+            gaps[mname].append(gap)
+            if mname == 'Markov + spare\ndifficulty':
+                print(f'  {name:15s}: Markov trad SD={np.std(t):.1f}, '
+                      f'world SD={np.std(w):.1f}, gap={gap:+.1f}')
+
+    x = np.arange(len(tier_names))
+    width = 0.25
+    colors = ['#1a1a1a', '#666666', '#aaaaaa']
+    hatches = ['', '///', '...']
+
+    fig, ax = plt.subplots(figsize=(12, 5))
+    for i, (mname, gap_vals) in enumerate(gaps.items()):
+        ax.bar(x + (i - 1) * width, gap_vals, width,
+               label=mname, color=colors[i], edgecolor='#333',
+               hatch=hatches[i], alpha=0.85)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(tier_names, fontsize=9)
+    ax.set_ylabel('SD Gap (Traditional − World Bowling)')
+    ax.set_title('Traditional Scoring Advantage: Three Simulation Models')
+    ax.legend(fontsize=9)
+    ax.axhline(0, color='gray', linewidth=0.5)
+
+    save_fig(fig, 'fig13_model_comparison')
+
+
 def main():
     os.makedirs(FIGURES_DIR, exist_ok=True)
     print('Generating simulation figures...')
@@ -278,6 +327,7 @@ def main():
     fig_crossover()
     fig_professional_sequences()
     fig_momentum_comparison()
+    fig_model_comparison()
     print('Done — all simulation figures saved.')
 
 
