@@ -3,7 +3,17 @@ title: "Reward Gradient Explorer"
 subtitle: "How much is each consecutive strike worth?"
 ---
 
-Use the slider to set the number of consecutive strikes from frame 1. All remaining frames are filled with your chosen open frame. Both scores update live.
+### What is "marginal value"?
+
+If you replace one open frame with a strike, your total game score goes up. The **marginal value** is *how much* it goes up. For example, with a (5,4) open frame:
+
+- The open scores 5 + 4 = **9 points**
+- A strike under World Bowling scores **30 points**
+- So the marginal value is 30 − 9 = **+21 points** — the same every time, regardless of when you throw it
+
+Under traditional scoring, the marginal value **depends on context**. A lone strike earns only +10 (because the bonus depends on the next two balls, which are just an open frame). But a strike that extends a run of consecutive strikes earns much more — up to +37 for the 10th strike in a perfect game — because it compounds the bonuses of preceding strikes.
+
+Use the slider below to see this in action. Try changing the fill type to confirm the pattern holds regardless of what the non-strike frames score.
 
 ```{ojs}
 //| echo: false
