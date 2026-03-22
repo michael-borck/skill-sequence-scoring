@@ -12,6 +12,8 @@ website:
         text: Scoring Explorer
       - href: reward.qmd
         text: Reward Gradient
+      - href: simulation.qmd
+        text: Simulation Results
       - href: about.qmd
         text: About
 

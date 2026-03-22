@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Skill, Sequence, and Scoring</title>
+<title>Simulation Results – Skill, Sequence, and Scoring</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -126,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -138,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Reward Gradient</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./simulation.html"> 
+    <a class="nav-link active" href="./simulation.html" aria-current="page"> 
 <span class="menu-text">Simulation Results</span></a>
   </li>  
   <li class="nav-item">
@@ -161,15 +126,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">Key Findings</a>
-  <ul class="collapse">
-  <li><a href="#traditional-scoring-is-sequence-sensitive" id="toc-traditional-scoring-is-sequence-sensitive" class="nav-link" data-scroll-target="#traditional-scoring-is-sequence-sensitive">1. Traditional scoring is sequence-sensitive</a></li>
-  <li><a href="#traditional-scoring-has-a-compounding-reward-gradient" id="toc-traditional-scoring-has-a-compounding-reward-gradient" class="nav-link" data-scroll-target="#traditional-scoring-has-a-compounding-reward-gradient">2. Traditional scoring has a compounding reward gradient</a></li>
-  <li><a href="#the-crossover-point-is-50-strike-rate" id="toc-the-crossover-point-is-50-strike-rate" class="nav-link" data-scroll-target="#the-crossover-point-is-50-strike-rate">3. The crossover point is ~50% strike rate</a></li>
-  <li><a href="#within-tier-discrimination-matters-most" id="toc-within-tier-discrimination-matters-most" class="nav-link" data-scroll-target="#within-tier-discrimination-matters-most">4. Within-tier discrimination matters most</a></li>
-  </ul></li>
-  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
+  <li><a href="#skill-tiers" id="toc-skill-tiers" class="nav-link active" data-scroll-target="#skill-tiers">Skill Tiers</a></li>
+  <li><a href="#score-distributions-by-tier" id="toc-score-distributions-by-tier" class="nav-link" data-scroll-target="#score-distributions-by-tier">Score Distributions by Tier</a></li>
+  <li><a href="#the-crossover-point" id="toc-the-crossover-point" class="nav-link" data-scroll-target="#the-crossover-point">The Crossover Point</a></li>
+  <li><a href="#robustness-three-simulation-models" id="toc-robustness-three-simulation-models" class="nav-link" data-scroll-target="#robustness-three-simulation-models">Robustness: Three Simulation Models</a></li>
+  <li><a href="#professional-level-sequences" id="toc-professional-level-sequences" class="nav-link" data-scroll-target="#professional-level-sequences">Professional-Level Sequences</a></li>
+  <li><a href="#want-to-explore-further" id="toc-want-to-explore-further" class="nav-link" data-scroll-target="#want-to-explore-further">Want to explore further?</a></li>
   </ul>
 </nav>
     </div>
@@ -178,8 +140,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Skill, Sequence, and Scoring</h1>
-<p class="subtitle lead">A Mathematical Comparison of Traditional and World Bowling Scoring Systems</p>
+<h1 class="title">Simulation Results</h1>
+<p class="subtitle lead">How scoring systems perform across skill levels</p>
 </div>
 
 
@@ -196,54 +158,99 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This interactive companion site accompanies the paper:</p>
-<blockquote class="blockquote">
-<p><strong>Skill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems</strong></p>
-<p>Michael Borck, Curtin University</p>
-</blockquote>
-<p>The paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways.</p>
+<p>These results come from Monte Carlo simulations of 50,000 games per skill tier, using three progressively realistic models. For full details and the ability to re-run with your own parameters, see the <a href="https://colab.research.google.com/github/michael-borck/skill-sequence-scoring/blob/main/notebooks/01_paper_results.ipynb">Colab notebooks</a>.</p>
+<section id="skill-tiers" class="level2">
+<h2 class="anchored" data-anchor-id="skill-tiers">Skill Tiers</h2>
+<p>We simulate six skill levels, calibrated against USBC and PBA statistics:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>Strike Rate</th>
+<th>Traditional Mean</th>
+<th>World Bowling Mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Recreational</td>
+<td>4%</td>
+<td>~91</td>
+<td>~95</td>
+</tr>
+<tr class="even">
+<td>Club</td>
+<td>20%</td>
+<td>~133</td>
+<td>~149</td>
+</tr>
+<tr class="odd">
+<td>Competitive</td>
+<td>40%</td>
+<td>~176</td>
+<td>~200</td>
+</tr>
+<tr class="even">
+<td>Elite</td>
+<td>55%</td>
+<td>~209</td>
+<td>~233</td>
+</tr>
+<tr class="odd">
+<td>Professional</td>
+<td>66%</td>
+<td>~232</td>
+<td>~253</td>
+</tr>
+<tr class="even">
+<td>Top 10</td>
+<td>73%</td>
+<td>~246</td>
+<td>~265</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="key-findings" class="level2">
-<h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
-<section id="traditional-scoring-is-sequence-sensitive" class="level3">
-<h3 class="anchored" data-anchor-id="traditional-scoring-is-sequence-sensitive">1. Traditional scoring is sequence-sensitive</h3>
-<p>The order of frames matters. The same frame composition can produce a score range of <strong>up to 39 points</strong> under traditional scoring, while World Bowling collapses all orderings to a single score.</p>
-<p><strong><a href="./explorer.html">Try it yourself →</a></strong></p>
+<section id="score-distributions-by-tier" class="level2">
+<h2 class="anchored" data-anchor-id="score-distributions-by-tier">Score Distributions by Tier</h2>
+<p>Notice how the distributions shift and compress differently under each system. At the recreational level, both systems produce similar shapes. At the professional level, World Bowling scores compress toward 300 while traditional scores maintain a wider spread.</p>
+<p><img src="images/fig8_tier_distributions.png" class="img-fluid"></p>
 </section>
-<section id="traditional-scoring-has-a-compounding-reward-gradient" class="level3">
-<h3 class="anchored" data-anchor-id="traditional-scoring-has-a-compounding-reward-gradient">2. Traditional scoring has a compounding reward gradient</h3>
-<p>Each consecutive strike is worth more than the last. Under World Bowling, every strike is worth the same regardless of context.</p>
-<p><strong><a href="./reward.html">Explore the gradient →</a></strong></p>
-</section>
-<section id="the-crossover-point-is-50-strike-rate" class="level3">
-<h3 class="anchored" data-anchor-id="the-crossover-point-is-50-strike-rate">3. The crossover point is ~50% strike rate</h3>
-<p>Below 50% strike rate, World Bowling provides more score spread. Above it, traditional scoring provides <strong>33% more spread</strong> at the professional level.</p>
-</section>
-<section id="within-tier-discrimination-matters-most" class="level3">
-<h3 class="anchored" data-anchor-id="within-tier-discrimination-matters-most">4. Within-tier discrimination matters most</h3>
-<p>Both systems separate recreational from professional players equally well. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes.</p>
-</section>
-</section>
-<section id="reproducibility" class="level2">
-<h2 class="anchored" data-anchor-id="reproducibility">Reproducibility</h2>
-<p>All code, data, and figures are available at:</p>
+<section id="the-crossover-point" class="level2">
+<h2 class="anchored" data-anchor-id="the-crossover-point">The Crossover Point</h2>
+<p>The key finding: <strong>score spread crosses over at approximately 50% strike rate.</strong></p>
 <ul>
-<li><strong>Source code</strong>: <a href="https://github.com/michael-borck/skill-sequence-scoring">github.com/michael-borck/skill-sequence-scoring</a></li>
-<li><strong>Paper PDF</strong>: <a href="https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf">Download</a></li>
+<li><strong>Below 50%</strong> (recreational, club): World Bowling provides <em>more</em> score spread. Its simplicity is a net benefit here.</li>
+<li><strong>Above 50%</strong> (elite, professional): Traditional scoring provides <em>more</em> spread — over 30% more at the Top 10 level.</li>
 </ul>
-<p>To reproduce all results:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/michael-borck/skill-sequence-scoring.git</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> skill-sequence-scoring</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> src</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_distributions.py    <span class="co"># Exact score distributions</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_analysis.py         <span class="co"># Sequence sensitivity analysis</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_simulation.py       <span class="co"># Monte Carlo simulation</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_visualisations.py   <span class="co"># Generate figures 1-5</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> sequence_permutations.py    <span class="co"># Exhaustive permutation analysis</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> simulation_figures.py       <span class="co"># Generate figures 8-11</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="images/fig9_mean_scores_tiers.png" class="img-fluid"></p>
+<p>The right panel shows the crossover clearly — the standard deviation lines cross between Competitive and Elite levels.</p>
+<p><img src="images/fig10_crossover_analysis.png" class="img-fluid"></p>
+</section>
+<section id="robustness-three-simulation-models" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-three-simulation-models">Robustness: Three Simulation Models</h2>
+<p>Does the finding hold if we make the simulation more realistic? We tested three models:</p>
+<ol type="1">
+<li><strong>Independent</strong> — each ball is statistically independent (conservative baseline)</li>
+<li><strong>Momentum</strong> — strike probability shifts ±5% based on the previous frame</li>
+<li><strong>Markov chain + spare difficulty</strong> — state-dependent strike probabilities calibrated from PBA data, with leave-dependent spare conversion rates</li>
+</ol>
+<p>All three models agree on the direction. More realistic models make the traditional scoring advantage <em>larger</em>, not smaller.</p>
+<p><img src="images/fig13_model_comparison.png" class="img-fluid"></p>
+</section>
+<section id="professional-level-sequences" class="level2">
+<h2 class="anchored" data-anchor-id="professional-level-sequences">Professional-Level Sequences</h2>
+<p>At the professional level, specific game sequences show large score differences between the systems. The systems agree at the extremes (perfect game, all spares) but diverge substantially for the mixed sequences that make up real competitive bowling.</p>
+<p><img src="images/fig11_professional_sequences.png" class="img-fluid"></p>
+<p>Key observation: “4 strikes then spares” scores 195 under traditional but 210 under World Bowling. “Spares then 4 strikes” scores 215 traditional but 210 World Bowling. <strong>Same frames, different order — traditional scoring encodes the difference, World Bowling erases it.</strong></p>
+</section>
+<section id="want-to-explore-further" class="level2">
+<h2 class="anchored" data-anchor-id="want-to-explore-further">Want to explore further?</h2>
+<ul>
+<li><strong><a href="./explorer.html">Scoring Explorer</a></strong> — build your own frame sequences and see both scores live</li>
+<li><strong><a href="./reward.html">Reward Gradient</a></strong> — see how the value of each consecutive strike changes</li>
+<li><strong><a href="https://colab.research.google.com/github/michael-borck/skill-sequence-scoring/blob/main/notebooks/02_interactive_explorer.ipynb">Run on Colab</a></strong> — adjust strike rates, spare rates, and model parameters with interactive sliders</li>
+</ul>
 
 
 </section>

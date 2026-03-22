@@ -63,6 +63,55 @@
     "text": "Try these experiments\nExperiment 1: Strike placement matters\n\nEnter: X, X, X, X, X, 5/, 5/, 5/, 5/ — note both scores\nClear and enter: 5/, 5/, 5/, 5/, X, X, X, X, X — note the traditional score changes, World Bowling stays the same\n\nExperiment 2: Consecutive vs scattered strikes\n\nEnter: X, X, X, 5,4, 5,4, 5,4, 5,4, 5,4, 5,4\nClear and enter: X, 5,4, X, 5,4, X, 5,4, 5,4, 5,4, 5,4\nSame three strikes, but consecutive strikes score higher under traditional scoring\n\nExperiment 3: The commutativity proof in action\n\nEnter any 9 frames you like and note the World Bowling score\nRearrange them in any order — the World Bowling score is always the same\nThis is Proposition 1 from the paper: World Bowling is commutative"
   },
   {
+    "objectID": "simulation.html",
+    "href": "simulation.html",
+    "title": "Simulation Results",
+    "section": "",
+    "text": "These results come from Monte Carlo simulations of 50,000 games per skill tier, using three progressively realistic models. For full details and the ability to re-run with your own parameters, see the Colab notebooks."
+  },
+  {
+    "objectID": "simulation.html#skill-tiers",
+    "href": "simulation.html#skill-tiers",
+    "title": "Simulation Results",
+    "section": "Skill Tiers",
+    "text": "Skill Tiers\nWe simulate six skill levels, calibrated against USBC and PBA statistics:\n\n\n\nTier\nStrike Rate\nTraditional Mean\nWorld Bowling Mean\n\n\n\n\nRecreational\n4%\n~91\n~95\n\n\nClub\n20%\n~133\n~149\n\n\nCompetitive\n40%\n~176\n~200\n\n\nElite\n55%\n~209\n~233\n\n\nProfessional\n66%\n~232\n~253\n\n\nTop 10\n73%\n~246\n~265"
+  },
+  {
+    "objectID": "simulation.html#score-distributions-by-tier",
+    "href": "simulation.html#score-distributions-by-tier",
+    "title": "Simulation Results",
+    "section": "Score Distributions by Tier",
+    "text": "Score Distributions by Tier\nNotice how the distributions shift and compress differently under each system. At the recreational level, both systems produce similar shapes. At the professional level, World Bowling scores compress toward 300 while traditional scores maintain a wider spread."
+  },
+  {
+    "objectID": "simulation.html#the-crossover-point",
+    "href": "simulation.html#the-crossover-point",
+    "title": "Simulation Results",
+    "section": "The Crossover Point",
+    "text": "The Crossover Point\nThe key finding: score spread crosses over at approximately 50% strike rate.\n\nBelow 50% (recreational, club): World Bowling provides more score spread. Its simplicity is a net benefit here.\nAbove 50% (elite, professional): Traditional scoring provides more spread — over 30% more at the Top 10 level.\n\n\nThe right panel shows the crossover clearly — the standard deviation lines cross between Competitive and Elite levels."
+  },
+  {
+    "objectID": "simulation.html#robustness-three-simulation-models",
+    "href": "simulation.html#robustness-three-simulation-models",
+    "title": "Simulation Results",
+    "section": "Robustness: Three Simulation Models",
+    "text": "Robustness: Three Simulation Models\nDoes the finding hold if we make the simulation more realistic? We tested three models:\n\nIndependent — each ball is statistically independent (conservative baseline)\nMomentum — strike probability shifts ±5% based on the previous frame\nMarkov chain + spare difficulty — state-dependent strike probabilities calibrated from PBA data, with leave-dependent spare conversion rates\n\nAll three models agree on the direction. More realistic models make the traditional scoring advantage larger, not smaller."
+  },
+  {
+    "objectID": "simulation.html#professional-level-sequences",
+    "href": "simulation.html#professional-level-sequences",
+    "title": "Simulation Results",
+    "section": "Professional-Level Sequences",
+    "text": "Professional-Level Sequences\nAt the professional level, specific game sequences show large score differences between the systems. The systems agree at the extremes (perfect game, all spares) but diverge substantially for the mixed sequences that make up real competitive bowling.\n\nKey observation: “4 strikes then spares” scores 195 under traditional but 210 under World Bowling. “Spares then 4 strikes” scores 215 traditional but 210 World Bowling. Same frames, different order — traditional scoring encodes the difference, World Bowling erases it."
+  },
+  {
+    "objectID": "simulation.html#want-to-explore-further",
+    "href": "simulation.html#want-to-explore-further",
+    "title": "Simulation Results",
+    "section": "Want to explore further?",
+    "text": "Want to explore further?\n\nScoring Explorer — build your own frame sequences and see both scores live\nReward Gradient — see how the value of each consecutive strike changes\nRun on Colab — adjust strike rates, spare rates, and model parameters with interactive sliders"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
