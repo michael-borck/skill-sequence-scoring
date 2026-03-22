@@ -92,13 +92,13 @@ For each frame $i$, the score is: 30 (strike), $10 + A_i$ (spare), or $A_i + B_i
 
 : Summary statistics for exact score distributions under uniform random play. {#tbl-summary}
 
-![Score distributions under traditional and World Bowling scoring, computed by exact combinatorial enumeration over all possible games. Dashed lines indicate modes.](../figures/fig1_distribution_overlay.pdf){#fig-distribution width=100%}
+![Score distributions under traditional and World Bowling scoring, computed by exact combinatorial enumeration over all possible games. Dashed lines indicate modes.](../figures/fig1_distribution_overlay.png){#fig-distribution width=100%}
 
 ## Impossible Scores
 
 A structural property of World Bowling scoring is the impossibility of scores in the range 290–299. This arises because 9 strikes yield at most $9 \times 30 + 19 = 289$ (9 strikes plus one maximum spare of 10 + 9), while 10 strikes yield exactly 300. No sequence of legal balls can produce a game score between 290 and 299 inclusive under World Bowling rules. This gap is not a curiosity — it is a direct consequence of the linear, frame-independent scoring structure, and it reveals a fundamental property: **the score space is not fully utilised**.
 
-![High-score tail on log scale. The shaded region at 290–299 marks scores that are mathematically impossible under World Bowling.](../figures/fig2_high_score_tail.pdf){#fig-tail width=100%}
+![High-score tail on log scale. The shaded region at 290–299 marks scores that are mathematically impossible under World Bowling.](../figures/fig2_high_score_tail.png){#fig-tail width=100%}
 
 ## High-Score Compression
 
@@ -143,7 +143,7 @@ We compute scores for fixed frame compositions under varying orderings. Consider
 
 Under World Bowling, all four orderings score identically (219). Under traditional scoring, the score varies by 20 points (188–208) depending solely on the ordering.
 
-![Sequence sensitivity across three compositions (2, 5, and 7 strikes out of 9 frames). In each panel, the same frames are reordered. World Bowling scores are identical for all orderings; traditional scores vary, with the range increasing at higher strike counts.](../figures/fig5_sequence_sensitivity.pdf){#fig-sequence width=100%}
+![Sequence sensitivity across three compositions (2, 5, and 7 strikes out of 9 frames). In each panel, the same frames are reordered. World Bowling scores are identical for all orderings; traditional scores vary, with the range increasing at higher strike counts.](../figures/fig5_sequence_sensitivity.png){#fig-sequence width=100%}
 
 ## Exhaustive Permutation Analysis
 
@@ -164,9 +164,9 @@ To quantify the full extent of sequence sensitivity, we enumerate all distinct p
 
 The World Bowling score range is exactly zero for every composition — confirming Proposition 1 empirically. The traditional score range grows with the mix of frame types, peaking at 26 points for compositions with 6–7 strikes. When open frames are included alongside strikes, the range increases further: 5 strikes mixed with 4 open frames (5, 4) produces a 39-point range across 126 orderings.
 
-![Left: score range across all orderings by composition. Right: score standard deviation due to frame order alone. World Bowling is zero throughout.](../figures/fig6_permutation_variance.pdf){#fig-permvar width=100%}
+![Left: score range across all orderings by composition. Right: score standard deviation due to frame order alone. World Bowling is zero throughout.](../figures/fig6_permutation_variance.png){#fig-permvar width=100%}
 
-![Score distribution across all orderings for three compositions (2, 5, and 7 strikes). Traditional scores spread across a range that widens with strike count; World Bowling collapses to a single value (dashed line) in every case.](../figures/fig7_permutation_distribution.pdf){#fig-permdist width=100%}
+![Score distribution across all orderings for three compositions (2, 5, and 7 strikes). Traditional scores spread across a range that widens with strike count; World Bowling collapses to a single value (dashed line) in every case.](../figures/fig7_permutation_distribution.png){#fig-permdist width=100%}
 
 ## Implications for Skill
 
@@ -197,7 +197,7 @@ Two observations are immediate. First, the initial strikes are undervalued in tr
 
 This structure rewards the *completion* of a skill streak more than its initiation. The first strike of a sequence is worth relatively little; the strike that extends a string is worth substantially more. Under World Bowling, every strike is worth exactly the same regardless of what surrounds it.
 
-![Marginal value of each additional consecutive strike, shown for three different non-strike fill patterns: weak (3,2), mid (5,4), and strong (8,1). The compounding pattern in traditional scoring and the flat World Bowling marginal are structural, not dependent on the fill choice.](../figures/fig3_reward_gradient.pdf){#fig-gradient width=100%}
+![Marginal value of each additional consecutive strike, shown for three different non-strike fill patterns: weak (3,2), mid (5,4), and strong (8,1). The compounding pattern in traditional scoring and the flat World Bowling marginal are structural, not dependent on the fill choice.](../figures/fig3_reward_gradient.png){#fig-gradient width=100%}
 
 
 # Part 2: Skill-Weighted Simulation {.unnumbered}
@@ -244,9 +244,9 @@ For each skill tier, we simulate 50,000 complete games under each model. Every s
 
 : Simulated score statistics by skill tier (50,000 games each). {#tbl-tierresults}
 
-![Score distributions at each skill tier under both scoring systems.](../figures/fig8_tier_distributions.pdf){#fig-tierdist width=100%}
+![Score distributions at each skill tier under both scoring systems.](../figures/fig8_tier_distributions.png){#fig-tierdist width=100%}
 
-![Left: mean scores by skill tier. Right: score standard deviation — note the crossover between systems.](../figures/fig9_mean_scores_tiers.pdf){#fig-tiermeans width=100%}
+![Left: mean scores by skill tier. Right: score standard deviation — note the crossover between systems.](../figures/fig9_mean_scores_tiers.png){#fig-tiermeans width=100%}
 
 
 # The Score Spread Crossover
@@ -265,7 +265,7 @@ We sweep strike rate continuously from 10% to 80% and compute score standard dev
 
 This crossover has a direct competitive interpretation. At recreational and club levels, World Bowling's wider score distribution means it actually provides *more* discrimination between adjacent skill levels — supporting the case for its use in casual and league play. At competitive and professional levels, the reversal means traditional scoring provides the finer discrimination that elite competition requires.
 
-![Left: mean score $\pm$ 1 SD by strike rate under both systems. Right: score standard deviation as a function of strike rate, showing the crossover at approximately 51%.](../figures/fig10_crossover_analysis.pdf){#fig-crossover width=100%}
+![Left: mean score $\pm$ 1 SD by strike rate under both systems. Right: score standard deviation as a function of strike rate, showing the crossover at approximately 51%.](../figures/fig10_crossover_analysis.png){#fig-crossover width=100%}
 
 ## Between-Tier vs Within-Tier Discrimination
 
@@ -294,7 +294,7 @@ To illustrate the practical consequences at the professional level, we compute s
 
 Two patterns are notable. First, the systems agree at the extremes (perfect game and all spares) but diverge substantially for the mixed sequences that constitute the vast majority of professional games. Second, the *direction* of the difference depends on the sequence — traditional scoring rewards sequences with consecutive strikes more than World Bowling does, while World Bowling rewards isolated strikes more. The traditional system encodes *how* the strikes were arranged; World Bowling treats them as interchangeable.
 
-![Professional-level sequence comparison under both scoring systems.](../figures/fig11_professional_sequences.pdf){#fig-proseq width=100%}
+![Professional-level sequence comparison under both scoring systems.](../figures/fig11_professional_sequences.png){#fig-proseq width=100%}
 
 ## The Fourth-to-Fifth Strike Problem
 
@@ -341,9 +341,9 @@ Our base simulation assumes frame-to-frame independence: each ball's outcome dep
 
 To test the sensitivity of our conclusions to this assumption, we compare three simulation models of increasing realism: the independent base case, a simple momentum model (±5% strike probability shift after strikes/opens), and a first-order Markov chain with leave-dependent spare difficulty (Section 6.2). @fig-models shows the SD gap (traditional minus World Bowling) across all six skill tiers under each model. Two observations are immediate. First, all three models agree on the *direction* of the effect at every tier: World Bowling provides more spread below competitive level, and traditional scoring provides more spread above it. The crossover point is robust to model choice. Second, the more realistic models produce *larger* gaps at the professional and Top 10 levels — the Markov model yields a traditional scoring advantage of +5.8 SD points at the Top 10 tier, compared to +4.1 under independence. The independence assumption is therefore conservative: any realistic model of sequential dependence amplifies the effect.
 
-![SD gap (Traditional minus World Bowling) across all six skill tiers under three simulation models: independent, momentum, and Markov chain with spare difficulty. More realistic models amplify the traditional scoring advantage at elite tiers.](../figures/fig13_model_comparison.pdf){#fig-models width=100%}
+![SD gap (Traditional minus World Bowling) across all six skill tiers under three simulation models: independent, momentum, and Markov chain with spare difficulty. More realistic models amplify the traditional scoring advantage at elite tiers.](../figures/fig13_model_comparison.png){#fig-models width=100%}
 
-![Left: score standard deviation under independent and momentum models. Right: the SD gap between systems widens under momentum at elite tiers.](../figures/fig12_momentum_comparison.pdf){#fig-momentum width=100%}
+![Left: score standard deviation under independent and momentum models. Right: the SD gap between systems widens under momentum at elite tiers.](../figures/fig12_momentum_comparison.png){#fig-momentum width=100%}
 
 ## Limitations and Future Work
 
