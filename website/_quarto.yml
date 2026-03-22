@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Skill, Sequence, and Scoring"
+  favicon: favicon.svg
   navbar:
     left:
       - href: index.qmd

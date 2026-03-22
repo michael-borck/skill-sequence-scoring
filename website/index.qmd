@@ -3,6 +3,8 @@ title: "Skill, Sequence, and Scoring"
 subtitle: "A Mathematical Comparison of Traditional and World Bowling Scoring Systems"
 ---
 
+Read the paper: [HTML](paper.html) | [PDF](https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf)
+
 ## Overview
 
 This interactive companion site accompanies the paper:
@@ -40,7 +42,6 @@ Both systems separate recreational from professional players equally well. The c
 All code, data, and figures are available at:
 
 - **Source code**: [github.com/michael-borck/skill-sequence-scoring](https://github.com/michael-borck/skill-sequence-scoring)
-- **Paper PDF**: [Download](https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf)
 
 To reproduce all results:
 

@@ -18,14 +18,14 @@
     "href": "index.html",
     "title": "Skill, Sequence, and Scoring",
     "section": "",
-    "text": "This interactive companion site accompanies the paper:\n\nSkill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck, Curtin University\n\nThe paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways."
+    "text": "Read the paper: HTML | PDF"
   },
   {
     "objectID": "index.html#overview",
     "href": "index.html#overview",
     "title": "Skill, Sequence, and Scoring",
-    "section": "",
-    "text": "This interactive companion site accompanies the paper:\n\nSkill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck, Curtin University\n\nThe paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways."
+    "section": "Overview",
+    "text": "Overview\nThis interactive companion site accompanies the paper:\n\nSkill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems\nMichael Borck, Curtin University\n\nThe paper demonstrates that traditional ten-pin bowling scoring and the World Bowling current-frame system differ in mathematically precise and practically significant ways."
   },
   {
     "objectID": "index.html#key-findings",
@@ -39,7 +39,7 @@
     "href": "index.html#reproducibility",
     "title": "Skill, Sequence, and Scoring",
     "section": "Reproducibility",
-    "text": "Reproducibility\nAll code, data, and figures are available at:\n\nSource code: github.com/michael-borck/skill-sequence-scoring\nPaper PDF: Download\n\nTo reproduce all results:\ngit clone https://github.com/michael-borck/skill-sequence-scoring.git\ncd skill-sequence-scoring\npip install -r requirements.txt\ncd src\npython bowling_distributions.py    # Exact score distributions\npython bowling_analysis.py         # Sequence sensitivity analysis\npython bowling_simulation.py       # Monte Carlo simulation\npython bowling_visualisations.py   # Generate figures 1-5\npython sequence_permutations.py    # Exhaustive permutation analysis\npython simulation_figures.py       # Generate figures 8-11"
+    "text": "Reproducibility\nAll code, data, and figures are available at:\n\nSource code: github.com/michael-borck/skill-sequence-scoring\n\nTo reproduce all results:\ngit clone https://github.com/michael-borck/skill-sequence-scoring.git\ncd skill-sequence-scoring\npip install -r requirements.txt\ncd src\npython bowling_distributions.py    # Exact score distributions\npython bowling_analysis.py         # Sequence sensitivity analysis\npython bowling_simulation.py       # Monte Carlo simulation\npython bowling_visualisations.py   # Generate figures 1-5\npython sequence_permutations.py    # Exhaustive permutation analysis\npython simulation_figures.py       # Generate figures 8-11"
   },
   {
     "objectID": "explorer.html",
