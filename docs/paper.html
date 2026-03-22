@@ -2325,25 +2325,39 @@ window.Quarto = {
 </script>
 
 <style type="text/css">
+figure,
+.quarto-float,
 .quarto-figure,
 .quarto-figure-center,
 .figure,
-div.cell-output-display {
+div.column,
+div.cell-output-display,
+div.quarto-float-fig,
+div.quarto-float-tbl {
 overflow: visible !important;
+overflow-x: visible !important;
 max-width: 100% !important;
 }
+figure img,
+.quarto-float img,
 .quarto-figure img,
-.quarto-figure-center img,
 .figure img,
 div.cell-output-display img {
 max-width: 100% !important;
+width: 100% !important;
 height: auto !important;
 overflow: visible !important;
 }
 
-.quarto-figure > div,
+div.column {
+overflow-x: visible !important;
+}
+
+figure > div,
+figure > p,
 .quarto-float > div {
 overflow: visible !important;
+overflow-x: visible !important;
 }
 </style>
 </head>

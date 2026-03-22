@@ -1,23 +1,38 @@
-/* Prevent scrollable figure containers — display at full width inline */
+/* Force all figures and images to display inline at full width — no scroll containers */
+figure,
+.quarto-float,
 .quarto-figure,
 .quarto-figure-center,
 .figure,
-div.cell-output-display {
+div.column,
+div.cell-output-display,
+div.quarto-float-fig,
+div.quarto-float-tbl {
   overflow: visible !important;
+  overflow-x: visible !important;
   max-width: 100% !important;
 }
 
+figure img,
+.quarto-float img,
 .quarto-figure img,
-.quarto-figure-center img,
 .figure img,
 div.cell-output-display img {
   max-width: 100% !important;
+  width: 100% !important;
   height: auto !important;
   overflow: visible !important;
 }
 
-/* Also fix any panel-tabset or embedded scroll containers */
-.quarto-figure > div,
+/* Override Quarto's default column overflow */
+div.column {
+  overflow-x: visible !important;
+}
+
+/* Catch any nested scroll wrappers */
+figure > div,
+figure > p,
 .quarto-float > div {
   overflow: visible !important;
+  overflow-x: visible !important;
 }
