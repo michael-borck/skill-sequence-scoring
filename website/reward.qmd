@@ -126,39 +126,39 @@ html`<div class="score-display world-score">
 
 ```{ojs}
 //| echo: false
-Plot = import("https://esm.sh/@observablehq/plot@0.6")
-```
-
-```{ojs}
-//| echo: false
-Plot.plot({
-  title: "Marginal value of each consecutive strike",
-  width: 700,
-  height: 350,
-  x: {label: "Strike number", domain: [1,2,3,4,5,6,7,8,9,10]},
-  y: {label: "Marginal score increase", domain: [0, 50]},
-  color: {legend: true},
-  marks: [
-    Plot.barY(gradientData.filter(d => d.strikes > 0), {
-      x: d => d.strikes - 0.15,
-      y: "tradMarginal",
-      fill: "#1a1a1a",
-      dx: -8,
-      title: d => `Traditional: +${d.tradMarginal}`,
-      tip: true
-    }),
-    Plot.barY(gradientData.filter(d => d.strikes > 0), {
-      x: d => d.strikes + 0.15,
-      y: "worldMarginal",
-      fill: "#aaaaaa",
-      dx: 8,
-      title: d => `World Bowling: +${d.worldMarginal}`,
-      tip: true
-    }),
-    Plot.ruleY([gradientData[1].worldMarginal], {stroke: "#888", strokeDasharray: "4,4"}),
-    Plot.ruleX([nStrikes], {stroke: "orange", strokeWidth: 2}),
-  ]
-})
+html`<div style="
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  margin: 20px 0;
+  max-width: 700px;
+">
+${gradientData.filter(d => d.strikes > 0).map(d => html`
+  <div style="text-align: center;">
+    <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Strike ${d.strikes}</div>
+    <div style="
+      background: ${d.strikes <= nStrikes ? '#1a1a1a' : '#e0e0e0'};
+      color: ${d.strikes <= nStrikes ? 'white' : '#999'};
+      padding: 8px 2px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.9em;
+    ">+${d.tradMarginal}</div>
+    <div style="
+      background: ${d.strikes <= nStrikes ? '#aaaaaa' : '#f0f0f0'};
+      color: ${d.strikes <= nStrikes ? 'white' : '#bbb'};
+      padding: 8px 2px;
+      border-radius: 4px;
+      margin-top: 3px;
+      font-size: 0.9em;
+    ">+${d.worldMarginal}</div>
+  </div>
+`)}
+</div>
+<div style="font-size: 0.8em; color: #666; max-width: 700px;">
+  <span style="display: inline-block; width: 12px; height: 12px; background: #1a1a1a; border-radius: 2px; vertical-align: middle;"></span> Traditional marginal &nbsp;&nbsp;
+  <span style="display: inline-block; width: 12px; height: 12px; background: #aaaaaa; border-radius: 2px; vertical-align: middle;"></span> World Bowling marginal (always flat)
+</div>`
 ```
 
 ### Full table
