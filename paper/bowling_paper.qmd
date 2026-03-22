@@ -208,7 +208,7 @@ This structure rewards the *completion* of a skill streak more than its initiati
 
 ## Player Model
 
-To ground the mathematical analysis in realistic playing conditions, we simulate bowling games across six empirically motivated skill tiers. Each player is characterised by three parameters: strike probability ($p_s$), spare conversion probability ($p_{sp}$), and mean first-ball pin count when not striking.
+To ground the mathematical analysis in realistic playing conditions, we simulate bowling games across six empirically motivated skill tiers. Each player is characterised by three parameters: strike probability ($p_s$), spare conversion probability ($p_{sp}$), and mean first-ball pin count when not striking. Tier parameters were calibrated against published data from multiple sources: @mccarthy2011 reports a mean score of 205.65 (SD 31.91) across 278,579 PBA National Tour games, with individual bowler ability estimates ranging from approximately 150 to 235; @vanderwerken2018 reports posterior mean strike probabilities ranging from approximately 53% to 66% across 53 PBA bowlers; and USBC published league averages anchor the recreational end.
 
 | Skill Tier | Strike Rate | Spare Rate | Pin Mean | Target Trad. Mean |
 |---|---|---|---|---|
@@ -219,7 +219,7 @@ To ground the mathematical analysis in realistic playing conditions, we simulate
 | Professional | 66% | 86% | 7.8 | ~230 |
 | Top 10 | 73% | 92% | 8.2 | ~245 |
 
-: Skill tier parameters. The recreational tier targets casual once-a-month bowlers (USBC league averages); the professional tier targets the PBA Tour season average of approximately 230; the Top 10 tier approximates the elite end of PBA performance [@yaari2012]. {#tbl-tiers}
+: Skill tier parameters. The recreational tier targets casual bowlers based on USBC league averages. The professional tier targets the PBA Tour season average of approximately 230, consistent with the upper range of bowler ability estimates reported by @mccarthy2011. The Top 10 tier (73% strike rate) is extrapolated from the upper tail of the professional ability distribution, representing the elite end of PBA performance [@yaari2012; @vanderwerken2018]. {#tbl-tiers}
 
 ## Simulation Protocol
 
