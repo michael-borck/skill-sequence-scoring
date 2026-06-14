@@ -331,6 +331,85 @@ def simulate_games_markov(n_games, p_strike, p_spare, pin_mean, seed=42):
     return np.array(trad_scores), np.array(world_scores)
 
 
+# ── Autocorrelation-Controlled Model (fixed marginal strike rate) ─────────────
+#
+# To isolate *streakiness* from raw skill, we need a model whose marginal strike
+# rate is held constant while its serial correlation varies. A two-state Markov
+# chain on (strike / non-strike) achieves this exactly. With
+#
+#     a = P(strike | prev strike)     = p + (1 - p) * phi
+#     b = P(strike | prev non-strike) = p * (1 - phi)
+#
+# the stationary strike rate is  b / (1 - a + b) = p  for every phi in [0, 1),
+# while phi is precisely the lag-1 autocorrelation of the strike indicator.
+# phi = 0 reproduces the independent model; larger phi clusters strikes into runs
+# without changing how many strikes occur on average. This lets us ask whether a
+# scoring system can tell apart two players of *identical* marginal skill who
+# differ only in how they sequence their strikes.
+
+def simulate_game_autocorr(rng, p_strike, p_spare, pin_mean, phi):
+    """
+    Simulate one game with lag-1 strike autocorrelation `phi` and the marginal
+    strike rate held exactly at `p_strike`. Spare conversion uses the same
+    leave-dependent difficulty classes as the Markov model.
+    """
+    a = min(p_strike + (1.0 - p_strike) * phi, 0.999)   # P(strike | prev strike)
+    b = max(p_strike * (1.0 - phi), 0.0)                 # P(strike | prev non-strike)
+
+    balls = []
+    prev_strike = rng.random() < p_strike  # start from the stationary distribution
+
+    def next_ps(prev):
+        return a if prev else b
+
+    # Frames 1-9
+    for _ in range(9):
+        b1 = simulate_first_ball(rng, next_ps(prev_strike), pin_mean)
+        balls.append(b1)
+        if b1 == 10:
+            prev_strike = True
+        else:
+            b2 = simulate_second_ball_difficulty(rng, b1, p_spare)
+            balls.append(b2)
+            prev_strike = False
+
+    # Frame 10
+    b1 = simulate_first_ball(rng, next_ps(prev_strike), pin_mean)
+    balls.append(b1)
+    if b1 == 10:
+        b2 = simulate_first_ball(rng, a, pin_mean)
+        balls.append(b2)
+        if b2 == 10:
+            b3 = simulate_first_ball(rng, a, pin_mean)
+            balls.append(b3)
+        else:
+            b3 = simulate_second_ball_difficulty(rng, b2, p_spare)
+            balls.append(b3)
+    else:
+        b2 = simulate_second_ball_difficulty(rng, b1, p_spare)
+        balls.append(b2)
+        if b1 + b2 == 10:
+            b3 = simulate_first_ball(rng, b, pin_mean)
+            balls.append(b3)
+
+    return balls
+
+
+def simulate_games_autocorr(n_games, p_strike, p_spare, pin_mean, phi, seed=42):
+    """Simulate n_games with the autocorrelation-controlled model."""
+    rng = np.random.default_rng(seed)
+    trad_scores = []
+    world_scores = []
+    for _ in range(n_games):
+        balls = simulate_game_autocorr(rng, p_strike, p_spare, pin_mean, phi)
+        t = score_traditional(balls)
+        w = score_world(balls)
+        if t is not None and w is not None:
+            trad_scores.append(t)
+            world_scores.append(w)
+    return np.array(trad_scores), np.array(world_scores)
+
+
 def simulate_games(n_games, p_strike, p_spare, pin_mean, seed=42):
     """
     Simulate n_games and score under both systems.

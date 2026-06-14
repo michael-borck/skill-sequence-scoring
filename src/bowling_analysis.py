@@ -308,7 +308,11 @@ def skill_discrimination(trad, world):
     print(f"  Traditional:   {te:.4f}")
     print(f"  World Bowling: {we:.4f}")
     print(f"  Difference:    {te - we:.4f}")
-    print("\nHigher entropy = more discriminating = better at separating skill levels.")
+    print("\nHigher entropy = more dispersed scores (wider, more even spread).")
+    print("NOTE: entropy/spread measures dispersion, NOT skill discrimination.")
+    print("See discrimination_analysis.py for a signal-vs-noise (ICC) treatment:")
+    print("the two systems are about equally reliable at separating skill;")
+    print("traditional scoring's distinctive property is sequencing sensitivity.")
 
 
 # ── Main ───────────────────────────────────────────────────────────────────────
@@ -341,18 +345,21 @@ def main():
    the value is flat at 30 regardless of context. Traditional scoring
    is therefore super-linear in skill streaks.
 
-3. SKILL DISCRIMINATION
-   Traditional scoring has higher Shannon entropy — it spreads skilled
-   players across a wider effective score range. World Bowling compresses
-   scores, making it harder to discriminate between skill levels at the
-   top end. The 290-299 impossibility gap is a structural artefact of
-   this compression.
+3. SPREAD vs DISCRIMINATION (see discrimination_analysis.py)
+   Under uniform play World Bowling actually has slightly higher entropy
+   (wider, more even spread). But spread is NOT discrimination: a
+   signal-vs-noise (ICC) decomposition shows the two systems are about
+   equally reliable at separating players by raw skill across the whole
+   skill range. Traditional scoring's larger spread at elite levels is
+   mostly within-player noise. The 290-299 gap is a structural artefact
+   of frame independence that narrows the score scale's granularity.
 
 4. MATHEMATICAL CONCLUSION
    World Bowling scoring optimises for SIMPLICITY (no future-ball
-   tracking) at the direct cost of SKILL SENSITIVITY. Traditional
-   scoring is more complex precisely because it encodes more information
-   about a player's sustained performance.
+   tracking) at the direct cost of SEQUENCING SENSITIVITY, not raw skill
+   sensitivity. Traditional scoring is more complex precisely because it
+   encodes how a player's strikes were arranged, the one dimension that
+   commutative scoring is structurally blind to.
 """)
 
 

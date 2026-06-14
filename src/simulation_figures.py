@@ -150,8 +150,12 @@ def fig_crossover():
 
     for i in range(1, len(trad_stds)):
         if trad_stds[i] > world_stds[i] and trad_stds[i-1] <= world_stds[i-1]:
-            cross_x = strike_rates[i]
-            cross_y = trad_stds[i]
+            # Linearly interpolate the exact crossing of the two SD curves.
+            d0 = trad_stds[i-1] - world_stds[i-1]
+            d1 = trad_stds[i] - world_stds[i]
+            frac = (-d0) / (d1 - d0) if (d1 - d0) != 0 else 0.0
+            cross_x = strike_rates[i-1] + frac * (strike_rates[i] - strike_rates[i-1])
+            cross_y = world_stds[i-1] + frac * (world_stds[i] - world_stds[i-1])
             ax2.axvline(cross_x, color='gray', linestyle=':', alpha=0.5)
             ax2.annotate(f'Crossover ≈ {cross_x:.0f}%',
                          xy=(cross_x, cross_y),

@@ -47,7 +47,23 @@ python src/bowling_distributions.py
 
 # Run extended analysis (sequence sensitivity, reward gradient, entropy)
 cd src && python bowling_analysis.py
+
+# Skill-weighted Monte Carlo simulation (tiers, crossover, pro sequences)
+cd src && python bowling_simulation.py
+
+# Signal-vs-noise reliability (ICC), streakiness discrimination at fixed skill,
+# bootstrap crossover CI, and face-validity check against published PBA moments
+cd src && python discrimination_analysis.py
+
+# Regenerate all figures
+cd src && python bowling_visualisations.py && python simulation_figures.py && python discrimination_figures.py
 ```
+
+### Key findings from the reliability analysis
+
+- **Single-game reliability (ICC) is nearly identical between the two systems across the full skill range.** Traditional scoring's larger spread at elite levels is mostly within-player *noise*, not between-player *signal* — so it does not discriminate raw skill better.
+- **Traditional scoring's exclusive advantage is sequencing.** At a fixed strike rate, traditional score tracks streakiness (correlation 0.49); World Bowling is structurally blind to it (correlation −0.04), as its commutativity proves.
+- **Spread crossover at 48.7%** (95% bootstrap CI 48.2–49.1%) — a crossover in score granularity, not in skill discrimination.
 
 ## Author
 
