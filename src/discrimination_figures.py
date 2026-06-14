@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from discrimination_analysis import (
-    reliability_vs_skill, streakiness_discrimination,
+    reliability_vs_skill, streakiness_discrimination, series_compounding,
 )
 from plot_style import (
     TRAD_COLOR, WORLD_COLOR, TRAD_LINE, WORLD_LINE, TRAD_LABEL, WORLD_LABEL,
@@ -122,13 +122,46 @@ def fig_streakiness(details, pair, summary):
     save_fig(fig, 'fig15_streakiness')
 
 
+def fig_series(series_rows):
+    n = np.array([r['games'] for r in series_rows])
+    trad_d = np.array([r['trad_d'] for r in series_rows])
+    world_d = np.array([r['world_d'] for r in series_rows])
+    trad_win = np.array([r['trad_winprob'] for r in series_rows]) * 100
+    world_win = np.array([r['world_winprob'] for r in series_rows]) * 100
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+
+    # Left: series effect size grows like sqrt(n) under traditional scoring.
+    ax1.plot(n, trad_d, label=TRAD_LABEL, **TRAD_LINE, marker='o', markersize=5)
+    ax1.plot(n, world_d, label=WORLD_LABEL, **WORLD_LINE, marker='s', markersize=5)
+    ax1.set_xlabel('Series length (games)')
+    ax1.set_ylabel("Series effect size (Cohen's $d$)")
+    ax1.set_title('Streakiness advantage compounds over a series')
+    ax1.legend()
+
+    # Right: head-to-head probability the streaky player wins the series.
+    ax2.plot(n, trad_win, label=TRAD_LABEL, **TRAD_LINE, marker='o', markersize=5)
+    ax2.plot(n, world_win, label=WORLD_LABEL, **WORLD_LINE, marker='s', markersize=5)
+    ax2.axhline(50, color='gray', linewidth=0.8, linestyle=':', alpha=0.7)
+    ax2.set_xlabel('Series length (games)')
+    ax2.set_ylabel('P(streaky player wins series) (%)')
+    ax2.set_title('Same skill, different streakiness: who wins?')
+    ax2.set_ylim(45, 100)
+    ax2.legend()
+
+    fig.tight_layout()
+    save_fig(fig, 'fig16_series_compounding')
+
+
 def main():
     os.makedirs(FIGURES_DIR, exist_ok=True)
     print('Generating discrimination figures...')
     reliability_rows = reliability_vs_skill()
     summary, pair, details = streakiness_discrimination()
+    series_rows = series_compounding()
     fig_reliability(reliability_rows)
     fig_streakiness(details, pair, summary)
+    fig_series(series_rows)
     print('Done — discrimination figures saved.')
 
 

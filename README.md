@@ -63,6 +63,8 @@ cd src && python bowling_visualisations.py && python simulation_figures.py && py
 
 - **Single-game reliability (ICC) is nearly identical between the two systems across the full skill range.** Traditional scoring's larger spread at elite levels is mostly within-player *noise*, not between-player *signal* — so it does not discriminate raw skill better.
 - **Traditional scoring's exclusive advantage is sequencing.** At a fixed strike rate, traditional score tracks streakiness (correlation 0.49); World Bowling is structurally blind to it (correlation −0.04), as its commutativity proves.
+- **The advantage is strikes-only.** Clustering spare *conversions* carries no signal under either system (r ≈ 0.02 and 0.01) — strikes chain (two-ball lookahead), spares do not (one-ball lookahead).
+- **It compounds over a series.** The moderate per-game effect (d = 0.23) grows as √n: a streakier player of identical skill wins a head-to-head 48-game tournament ~90% of the time under traditional scoring, but ~53% (chance) under World Bowling.
 - **Spread crossover at 48.7%** (95% bootstrap CI 48.2–49.1%) — a crossover in score granularity, not in skill discrimination.
 
 ## Author

@@ -395,6 +395,62 @@ def simulate_game_autocorr(rng, p_strike, p_spare, pin_mean, phi):
     return balls
 
 
+def simulate_game_spare_autocorr(rng, p_strike, p_spare, pin_mean, psi):
+    """
+    Companion to simulate_game_autocorr for the *spare* dimension. Strikes are
+    independent at rate p_strike; among non-strike frames, spare conversion
+    follows a two-state Markov chain whose marginal conversion rate is held at
+    p_spare while its lag-1 autocorrelation is `psi`. This isolates whether
+    clustering spare conversions (rather than strikes) carries any scoring signal.
+
+        a_sp = P(convert | prev non-strike frame converted)    = p_spare + (1 - p_spare) * psi
+        b_sp = P(convert | prev non-strike frame missed)       = p_spare * (1 - psi)
+
+    The chain advances only across non-strike frames; strike frames do not reset
+    or update the conversion state.
+    """
+    a_sp = min(p_spare + (1.0 - p_spare) * psi, 0.999)
+    b_sp = max(p_spare * (1.0 - psi), 0.0)
+    prev_converted = rng.random() < p_spare  # start from the stationary distribution
+
+    def second_ball(first_ball):
+        nonlocal prev_converted
+        remaining = 10 - first_ball
+        if remaining == 0:
+            return 0
+        p_conv = a_sp if prev_converted else b_sp
+        if rng.random() < p_conv:
+            prev_converted = True
+            return remaining
+        prev_converted = False
+        return int(rng.integers(0, remaining))
+
+    balls = []
+    for _ in range(9):
+        b1 = simulate_first_ball(rng, p_strike, pin_mean)
+        balls.append(b1)
+        if b1 < 10:
+            balls.append(second_ball(b1))
+
+    # Frame 10
+    b1 = simulate_first_ball(rng, p_strike, pin_mean)
+    balls.append(b1)
+    if b1 == 10:
+        b2 = simulate_first_ball(rng, p_strike, pin_mean)
+        balls.append(b2)
+        if b2 == 10:
+            balls.append(simulate_first_ball(rng, p_strike, pin_mean))
+        else:
+            balls.append(second_ball(b2))
+    else:
+        b2 = second_ball(b1)
+        balls.append(b2)
+        if b1 + b2 == 10:
+            balls.append(simulate_first_ball(rng, p_strike, pin_mean))
+
+    return balls
+
+
 def simulate_games_autocorr(n_games, p_strike, p_spare, pin_mean, phi, seed=42):
     """Simulate n_games with the autocorrelation-controlled model."""
     rng = np.random.default_rng(seed)

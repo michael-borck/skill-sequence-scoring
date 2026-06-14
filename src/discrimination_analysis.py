@@ -41,6 +41,7 @@ import numpy as np
 
 from bowling_simulation import (
     SKILL_TIERS, simulate_game, simulate_game_markov, simulate_game_autocorr,
+    simulate_game_spare_autocorr,
 )
 from bowling_analysis import score_traditional, score_world
 
@@ -102,6 +103,8 @@ def _simulate_player(rng, p_strike, p_spare, pin_mean, n_games, model='independe
     for _ in range(n_games):
         if model == 'autocorr':
             balls = simulate_game_autocorr(rng, p_strike, p_spare, pin_mean, phi)
+        elif model == 'spare_autocorr':
+            balls = simulate_game_spare_autocorr(rng, p_strike, p_spare, pin_mean, phi)
         elif model == 'markov':
             balls = simulate_game_markov(rng, p_strike, p_spare, pin_mean)
         else:
@@ -264,6 +267,57 @@ def streakiness_discrimination(p_strike=0.66, phi_max=0.35, n_players=140,
     return summary, pair, details
 
 
+# ── Analysis 2b: spare-sequencing discrimination (control) ────────────────────
+
+def spare_sequencing_discrimination(p_strike=0.66, psi_max=0.35, n_players=140,
+                                    n_games=80, seed=20240605):
+    """
+    Control experiment for the streakiness result. Strikes are independent;
+    spare *conversion* is clustered (autocorrelation psi) at a fixed marginal
+    conversion rate. Because a spare's traditional bonus is the next frame's
+    first ball, and that ball does not depend on whether later spares are
+    converted, clustering spare conversions should carry essentially no scoring
+    signal under either system. This isolates the strikes-only nature of the
+    sequencing advantage. We expect both correlations near zero.
+    """
+    p_spare, pin_mean = skill_params(p_strike)
+    rng = np.random.default_rng(seed)
+
+    print('\n' + '=' * 78)
+    print(f'  SPARE-SEQUENCING CONTROL (strikes independent at {p_strike*100:.0f}%, '
+          f'spare conversion clustered)')
+    print('=' * 78)
+
+    psis = rng.uniform(0.0, psi_max, n_players)
+    trad_rows, world_rows = [], []
+    for psi in psis:
+        t, w = _simulate_player(rng, p_strike, p_spare, pin_mean, n_games,
+                                model='spare_autocorr', phi=psi)
+        m = min(len(t), len(w), n_games)
+        trad_rows.append(t[:m])
+        world_rows.append(w[:m])
+
+    m = min(len(r) for r in trad_rows)
+    trad_mat = np.array([r[:m] for r in trad_rows])
+    world_mat = np.array([r[:m] for r in world_rows])
+
+    trad_means = trad_mat.mean(axis=1)
+    world_means = world_mat.mean(axis=1)
+    trad_corr = np.corrcoef(psis, trad_means)[0, 1]
+    world_corr = np.corrcoef(psis, world_means)[0, 1]
+
+    print(f'\nCorrelation of player mean score with spare-conversion clustering psi:')
+    print(f'  Traditional : r = {trad_corr:+.3f}')
+    print(f'  World Bowl. : r = {world_corr:+.3f}')
+    print('  (Compare strike streakiness: Traditional r = +0.49. Spare clustering '
+          'carries no signal.)')
+
+    return {
+        'p_strike': p_strike, 'psi_max': psi_max,
+        'trad_corr_psi': trad_corr, 'world_corr_psi': world_corr,
+    }
+
+
 # ── Analysis 3: bootstrap CI for the score-spread crossover point ─────────────
 
 def _interp_crossing(x, diff):
@@ -330,6 +384,62 @@ def bootstrap_crossover(strike_rates=None, n_games=20_000, n_boot=500,
           f'(95% bootstrap CI: {lo*100:.1f}% - {hi*100:.1f}%, '
           f'{len(crossings)}/{n_boot} replicates with a crossing)')
     return result
+
+
+# ── Analysis 4: compounding of the streakiness signal over a series ───────────
+
+def series_compounding(p_strike=0.66, phi_high=0.35, series_lengths=None,
+                       n_per_game=40_000, n_series_mc=30_000, seed=20240606):
+    """
+    The per-game streakiness effect is moderate (Cohen's d ~ 0.23). Competition,
+    however, is decided over multi-game series, and an i.i.d. per-game advantage
+    compounds: the mean total gap grows like n while its standard deviation grows
+    like sqrt(n), so the series effect size grows like sqrt(n). We quantify this
+    for two players of identical 66% marginal skill, one streak-free (phi=0) and
+    one streaky (phi=phi_high), reporting both the series Cohen's d and the
+    head-to-head probability that the streaky player wins the series.
+    """
+    if series_lengths is None:
+        series_lengths = [1, 3, 6, 12, 18, 24, 36, 48]
+
+    p_spare, pin_mean = skill_params(p_strike)
+    rng = np.random.default_rng(seed)
+
+    # Per-game score pools for each player under each system.
+    t_lo, w_lo = _simulate_player(rng, p_strike, p_spare, pin_mean, n_per_game,
+                                  model='autocorr', phi=0.0)
+    t_hi, w_hi = _simulate_player(rng, p_strike, p_spare, pin_mean, n_per_game,
+                                  model='autocorr', phi=phi_high)
+
+    print('\n' + '=' * 78)
+    print(f'  COMPOUNDING OVER A SERIES (streaky phi={phi_high} vs steady phi=0, '
+          f'both {p_strike*100:.0f}% strike rate)')
+    print('=' * 78)
+    print(f'\n{"Games":>6} {"Trad d":>8} {"WB d":>7} '
+          f'{"Trad win%":>10} {"WB win%":>9}')
+    print('-' * 46)
+
+    mc_rng = np.random.default_rng(seed + 1)
+
+    def series_stats(pool_hi, pool_lo, n):
+        hi = mc_rng.choice(pool_hi, size=(n_series_mc, n)).sum(axis=1)
+        lo = mc_rng.choice(pool_lo, size=(n_series_mc, n)).sum(axis=1)
+        d = cohens_d(hi, lo)
+        win = np.mean(hi > lo) + 0.5 * np.mean(hi == lo)
+        return d, win
+
+    rows = []
+    for n in series_lengths:
+        td, twin = series_stats(t_hi, t_lo, n)
+        wd, wwin = series_stats(w_hi, w_lo, n)
+        rows.append({
+            'games': n,
+            'trad_d': td, 'world_d': wd,
+            'trad_winprob': twin, 'world_winprob': wwin,
+        })
+        print(f'{n:>6} {td:>8.2f} {wd:>7.2f} {twin*100:>9.1f}% {wwin*100:>8.1f}%')
+
+    return rows
 
 
 # ── Face validity: reproduce published aggregate moments ──────────────────────
@@ -408,13 +518,37 @@ def save_validation(validation):
     print(f'Saved: {path}')
 
 
+def save_rows(rows, filename):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    path = os.path.join(DATA_DIR, filename)
+    with open(path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f'Saved: {path}')
+
+
+def save_dict(d, filename):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    path = os.path.join(DATA_DIR, filename)
+    with open(path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=list(d.keys()))
+        writer.writeheader()
+        writer.writerow(d)
+    print(f'Saved: {path}')
+
+
 def main():
     reliability_rows = reliability_vs_skill()
     streak_summary, _pair, _details = streakiness_discrimination()
+    spare_summary = spare_sequencing_discrimination()
+    series_rows = series_compounding()
     crossover_ci = bootstrap_crossover()
     validation = validate_against_published()
     save_results(reliability_rows, streak_summary, crossover_ci)
     save_validation(validation)
+    save_dict(spare_summary, 'spare_sequencing.csv')
+    save_rows(series_rows, 'series_compounding.csv')
     return reliability_rows, streak_summary, crossover_ci, validation
 
 
