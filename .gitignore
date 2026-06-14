@@ -34,3 +34,14 @@ htmlcov/
 
 # Environment
 .env
+
+# Copyrighted source papers — do not redistribute in a public repo
+references/*.pdf
+
+# Quarto / manuscript build artifacts (regenerate with `quarto render`)
+.quarto/
+/paper/*_files/
+/paper/bowling_paper.html
+# Note: paper/bowling_paper.pdf and paper/bowling_paper.tex remain tracked
+# (the author's own rendered manuscript). Remove them here if you prefer a
+# source-only repo.
