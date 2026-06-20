@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: ../docs
+  pre-render: copy-figures.sh
 
 website:
   title: "Skill, Sequence, and Scoring"
