@@ -212,75 +212,16 @@ def fig_professional_sequences():
     save_fig(fig, 'fig11_professional_sequences')
 
 
-def fig_momentum_comparison():
+def fig_model_robustness():
     """
-    Compare score spread under independent vs momentum models.
-    Shows that adding streakiness amplifies the traditional scoring advantage.
+    Combined robustness figure: score spread under independent vs momentum
+    models, and the SD gap across all three simulation models (independent,
+    momentum, Markov chain with spare difficulty). Shows that more realistic
+    models amplify the traditional scoring advantage.
     """
     tier_names = list(SKILL_TIERS.keys())
     n_games = 30_000
     momentum = 0.05
-
-    trad_sd_indep, world_sd_indep = [], []
-    trad_sd_mom, world_sd_mom = [], []
-
-    for name, params in SKILL_TIERS.items():
-        # Independent model
-        ti, wi = simulate_games(
-            n_games, params['p_strike'], params['p_spare'], params['pin_mean'])
-        trad_sd_indep.append(np.std(ti))
-        world_sd_indep.append(np.std(wi))
-
-        # Momentum model
-        tm, wm = simulate_games_momentum(
-            n_games, params['p_strike'], params['p_spare'], params['pin_mean'],
-            momentum=momentum)
-        trad_sd_mom.append(np.std(tm))
-        world_sd_mom.append(np.std(wm))
-
-    x = np.arange(len(tier_names))
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
-
-    # Left: Traditional scoring — independent vs momentum
-    ax1.plot(tier_names, trad_sd_indep, '-', marker='o', color=TRAD_COLOR,
-             label='Trad. (independent)', markersize=7)
-    ax1.plot(tier_names, trad_sd_mom, marker='^', color=TRAD_COLOR,
-             label='Trad. (momentum)', markersize=7, alpha=0.7, linestyle=':')
-    ax1.plot(tier_names, world_sd_indep, marker='s', color=WORLD_COLOR,
-             label='WB (independent)', markersize=7, linestyle='--')
-    ax1.plot(tier_names, world_sd_mom, marker='v', color=WORLD_COLOR,
-             label='WB (momentum)', markersize=7, alpha=0.7, linestyle=':')
-    ax1.set_ylabel('Score Standard Deviation')
-    ax1.set_title('Score Spread: Independent vs Momentum Model')
-    ax1.legend(fontsize=8)
-    ax1.tick_params(axis='x', rotation=15)
-
-    # Right: SD gap (trad - world) under each model
-    gap_indep = [t - w for t, w in zip(trad_sd_indep, world_sd_indep)]
-    gap_mom = [t - w for t, w in zip(trad_sd_mom, world_sd_mom)]
-
-    ax2.bar(x - 0.18, gap_indep, 0.35, label='Independent model', **TRAD_BAR)
-    ax2.bar(x + 0.18, gap_mom, 0.35, label='Momentum model',
-            color='#555555', edgecolor='#333333', hatch='...', alpha=0.85)
-    ax2.set_xticks(x)
-    ax2.set_xticklabels(tier_names, fontsize=9, rotation=15)
-    ax2.set_ylabel('SD Gap (Traditional − World Bowling)')
-    ax2.set_title('Traditional Scoring Advantage in Score Spread')
-    ax2.legend(fontsize=8)
-    ax2.axhline(0, color='gray', linewidth=0.5)
-
-    fig.tight_layout()
-    save_fig(fig, 'fig12_momentum_comparison')
-
-
-def fig_model_comparison():
-    """
-    Compare all three simulation models: independent, momentum, Markov chain.
-    Shows that more realistic models amplify the traditional scoring advantage.
-    """
-    tier_names = list(SKILL_TIERS.keys())
-    n_games = 30_000
 
     models = {
         'Independent': lambda p: simulate_games(
@@ -291,36 +232,73 @@ def fig_model_comparison():
             n_games, p['p_strike'], p['p_spare'], p['pin_mean']),
     }
 
-    # Compute SD gap (trad - world) for each model at each tier
-    gaps = {m: [] for m in models}
+    # Single pass: store trad/world SDs per model per tier
+    sds = {m: {'trad': [], 'world': []} for m in models}
     for name, params in SKILL_TIERS.items():
         for mname, mfn in models.items():
             t, w = mfn(params)
-            gap = np.std(t) - np.std(w)
-            gaps[mname].append(gap)
-            if mname == 'Markov + spare\ndifficulty':
-                print(f'  {name:15s}: Markov trad SD={np.std(t):.1f}, '
-                      f'world SD={np.std(w):.1f}, gap={gap:+.1f}')
+            sds[mname]['trad'].append(np.std(t))
+            sds[mname]['world'].append(np.std(w))
 
     x = np.arange(len(tier_names))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(17, 5))
+
+    # Panel 1: score SD by tier — independent vs momentum
+    ax1.plot(tier_names, sds['Independent']['trad'], '-', marker='o',
+             color=TRAD_COLOR, label='Trad. (independent)', markersize=7)
+    ax1.plot(tier_names, sds['Momentum']['trad'], marker='^', color=TRAD_COLOR,
+             label='Trad. (momentum)', markersize=7, alpha=0.7, linestyle=':')
+    ax1.plot(tier_names, sds['Independent']['world'], marker='s',
+             color=WORLD_COLOR, label='WB (independent)', markersize=7,
+             linestyle='--')
+    ax1.plot(tier_names, sds['Momentum']['world'], marker='v',
+             color=WORLD_COLOR, label='WB (momentum)', markersize=7,
+             alpha=0.7, linestyle=':')
+    ax1.set_ylabel('Score Standard Deviation')
+    ax1.set_title('Score Spread: Independent vs Momentum Model')
+    ax1.legend(fontsize=8)
+    ax1.tick_params(axis='x', rotation=15)
+
+    # Panel 2: SD gap (trad - world) — independent vs momentum
+    gap_indep = [t - w for t, w in zip(sds['Independent']['trad'],
+                                       sds['Independent']['world'])]
+    gap_mom = [t - w for t, w in zip(sds['Momentum']['trad'],
+                                     sds['Momentum']['world'])]
+
+    ax2.bar(x - 0.18, gap_indep, 0.35, label='Independent model', **TRAD_BAR)
+    ax2.bar(x + 0.18, gap_mom, 0.35, label='Momentum model',
+            color='#555555', edgecolor='#333333', hatch='...', alpha=0.85)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(tier_names, fontsize=9, rotation=15)
+    ax2.set_ylabel('SD Gap (Traditional − World Bowling)')
+    ax2.set_title('Spread Advantage: Independent vs Momentum')
+    ax2.legend(fontsize=8)
+    ax2.axhline(0, color='gray', linewidth=0.5)
+
+    # Panel 3: SD gap across all three models
+    gaps = {m: [t - w for t, w in zip(sds[m]['trad'], sds[m]['world'])]
+            for m in models}
+    for mname in models:
+        if mname.startswith('Markov'):
+            for name, g in zip(tier_names, gaps[mname]):
+                print(f'  {name:15s}: Markov gap={g:+.1f}')
+
     width = 0.25
     colors = ['#1a1a1a', '#666666', '#aaaaaa']
     hatches = ['', '///', '...']
-
-    fig, ax = plt.subplots(figsize=(12, 5))
     for i, (mname, gap_vals) in enumerate(gaps.items()):
-        ax.bar(x + (i - 1) * width, gap_vals, width,
-               label=mname, color=colors[i], edgecolor='#333',
-               hatch=hatches[i], alpha=0.85)
+        ax3.bar(x + (i - 1) * width, gap_vals, width,
+                label=mname, color=colors[i], edgecolor='#333',
+                hatch=hatches[i], alpha=0.85)
+    ax3.set_xticks(x)
+    ax3.set_xticklabels(tier_names, fontsize=9, rotation=15)
+    ax3.set_ylabel('SD Gap (Traditional − World Bowling)')
+    ax3.set_title('Spread Advantage: Three Models')
+    ax3.legend(fontsize=8)
+    ax3.axhline(0, color='gray', linewidth=0.5)
 
-    ax.set_xticks(x)
-    ax.set_xticklabels(tier_names, fontsize=9)
-    ax.set_ylabel('SD Gap (Traditional − World Bowling)')
-    ax.set_title('Traditional Scoring Advantage: Three Simulation Models')
-    ax.legend(fontsize=9)
-    ax.axhline(0, color='gray', linewidth=0.5)
-
-    save_fig(fig, 'fig13_model_comparison')
+    fig.tight_layout()
+    save_fig(fig, 'fig12_model_robustness')
 
 
 def main():
@@ -330,8 +308,7 @@ def main():
     fig_mean_scores_by_tier()
     fig_crossover()
     fig_professional_sequences()
-    fig_momentum_comparison()
-    fig_model_comparison()
+    fig_model_robustness()
     print('Done — all simulation figures saved.')
 
 

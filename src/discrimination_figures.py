@@ -78,7 +78,7 @@ def fig_streakiness(details, pair, summary):
     trad_means = details['trad_player_means']
     world_means = details['world_player_means']
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(16, 5))
 
     # Left: player mean score vs true streakiness. Traditional rises; WB is flat.
     ax1.scatter(phis, trad_means, s=14, color=TRAD_COLOR, alpha=0.6,
@@ -97,26 +97,30 @@ def fig_streakiness(details, pair, summary):
                   f'WB $r={summary["world_corr_phi"]:+.2f}$)')
     ax1.legend()
 
-    # Right: head-to-head game-score distributions, low vs high streak.
+    # Middle/right: game-score distributions, low vs high streak, one panel
+    # per scoring system to avoid overplotting.
     bins = np.arange(150, 305, 5)
-    ax2.hist(pair['_t_lo'], bins=bins, density=True, alpha=0.45, color=TRAD_COLOR,
-             label=f'Trad., $\\phi$=0')
-    ax2.hist(pair['_t_hi'], bins=bins, density=True, alpha=0.45, color=TRAD_COLOR,
+    ax2.hist(pair['_t_lo'], bins=bins, density=True, alpha=0.5, color=TRAD_COLOR,
+             label=f'$\\phi$=0')
+    ax2.hist(pair['_t_hi'], bins=bins, density=True, color=TRAD_COLOR,
              histtype='step', linewidth=1.8,
-             label=f'Trad., $\\phi$={pair["phi_high"]}')
-    ax2.hist(pair['_w_lo'], bins=bins, density=True, alpha=0.35, color=WORLD_COLOR,
-             label=f'WB, $\\phi$=0')
-    ax2.hist(pair['_w_hi'], bins=bins, density=True, alpha=0.35, color=WORLD_COLOR,
-             histtype='step', linewidth=1.8, linestyle='--',
-             label=f'WB, $\\phi$={pair["phi_high"]}')
+             label=f'$\\phi$={pair["phi_high"]}')
     ax2.axvline(pair['trad_mean_low'], color=TRAD_COLOR, linewidth=1, alpha=0.7)
     ax2.axvline(pair['trad_mean_high'], color=TRAD_COLOR, linewidth=1, alpha=0.7,
                 linestyle=':')
     ax2.set_xlabel('Game score')
     ax2.set_ylabel('Density')
-    ax2.set_title('Low vs high streak at fixed skill\n'
-                  f'(Trad. $d={pair["trad_d"]:+.2f}$, WB $d={pair["world_d"]:+.2f}$)')
-    ax2.legend(fontsize=8)
+    ax2.set_title(f'Traditional ($d={pair["trad_d"]:+.2f}$)')
+    ax2.legend(fontsize=8, title='Streakiness')
+
+    ax3.hist(pair['_w_lo'], bins=bins, density=True, alpha=0.5,
+             color=WORLD_COLOR, label=f'$\\phi$=0')
+    ax3.hist(pair['_w_hi'], bins=bins, density=True, color=WORLD_COLOR,
+             histtype='step', linewidth=1.8, linestyle='--',
+             label=f'$\\phi$={pair["phi_high"]}')
+    ax3.set_xlabel('Game score')
+    ax3.set_title(f'World Bowling ($d={pair["world_d"]:+.2f}$)')
+    ax3.legend(fontsize=8, title='Streakiness')
 
     fig.tight_layout()
     save_fig(fig, 'fig15_streakiness')

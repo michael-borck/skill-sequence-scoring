@@ -170,7 +170,9 @@ def main():
             ])
     print(f'\nResults saved to: {csv_path}')
 
-    # ── Figure 6: Score range by composition ─────────────────────────────────
+    # ── Figure 6: Combined permutation analysis (2 rows) ─────────────────────
+    # Top row: score range and SD by composition. Bottom row: score
+    # distributions across all orderings for three compositions (2X, 5X, 7X).
 
     # Use just the strike/spare compositions for the main figure
     strike_spare_results = all_results[:8]
@@ -179,9 +181,12 @@ def main():
     trad_stdevs = [r['trad_stdev'] for r in strike_spare_results]
     world_ranges = [r['world_range'] for r in strike_spare_results]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    fig = plt.figure(figsize=(13, 8.5))
+    gs = fig.add_gridspec(2, 6, hspace=0.35, wspace=0.4)
+    ax1 = fig.add_subplot(gs[0, :3])
+    ax2 = fig.add_subplot(gs[0, 3:])
 
-    # Left: score range
+    # Top-left: score range
     ax1.bar([n - 0.18 for n in n_strikes_vals], trad_ranges, width=0.35,
             label=TRAD_LABEL, **TRAD_BAR)
     ax1.bar([n + 0.18 for n in n_strikes_vals], world_ranges, width=0.35,
@@ -192,7 +197,7 @@ def main():
     ax1.legend()
     ax1.set_xticks(n_strikes_vals)
 
-    # Right: standard deviation
+    # Top-right: standard deviation
     ax2.plot(n_strikes_vals, trad_stdevs, '-', marker='o', color=TRAD_COLOR,
              label=TRAD_LABEL, markersize=6)
     ax2.plot(n_strikes_vals, [0]*8, '--', marker='s', color=WORLD_COLOR,
@@ -203,25 +208,12 @@ def main():
     ax2.legend()
     ax2.set_xticks(n_strikes_vals)
 
-    fig.tight_layout()
-    path = os.path.join(FIGURES_DIR, 'fig6_permutation_variance.pdf')
-    fig.savefig(path)
-    png_path = os.path.join(FIGURES_DIR, 'fig6_permutation_variance.png')
-    fig.savefig(png_path)
-    plt.close(fig)
-    print(f'Saved: {path}')
-    print(f'Saved: {png_path}')
-
-    # ── Figure 7: Score distributions for 3 compositions (small-multiples) ───
-
-    # Show 2X+7sp, 5X+4sp, 7X+2sp — same trio as Fig 5
+    # Bottom row: score distributions for 2X+7sp, 5X+4sp, 7X+2sp (as Fig 5)
     panel_indices = [1, 4, 6]  # indices into all_results (0-based: 2X, 5X, 7X)
     panel_labels = ['2 Strikes + 7 Spares', '5 Strikes + 4 Spares', '7 Strikes + 2 Spares']
 
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-
     for idx, (ri, label) in enumerate(zip(panel_indices, panel_labels)):
-        ax = axes[idx]
+        ax = fig.add_subplot(gs[1, idx*2:(idx+1)*2])
         r = all_results[ri]
         trad_counter = Counter(r['trad_scores'])
 
@@ -246,12 +238,8 @@ def main():
                     xy=(r['trad_min'], max(trad_y) * 0.85),
                     fontsize=8, color=TRAD_COLOR, style='italic')
 
-    fig.suptitle('Score Distribution Across All Orderings of Each Composition',
-                 fontsize=13, y=1.02)
-    fig.tight_layout()
-
     for ext in ['pdf', 'png']:
-        path = os.path.join(FIGURES_DIR, f'fig7_permutation_distribution.{ext}')
+        path = os.path.join(FIGURES_DIR, f'fig6_permutation_analysis.{ext}')
         fig.savefig(path)
         print(f'Saved: {path}')
     plt.close(fig)

@@ -52,3 +52,12 @@ starting-prompt.md
 # Note: paper/bowling_paper.pdf and paper/bowling_paper.tex remain tracked
 # (the author's own rendered manuscript). Remove them here if you prefer a
 # source-only repo.
+
+# LaTeX build artifacts from the De Gruyter submission package
+# (regenerate: cd paper/submission && pdflatex bowling_submission && bibtex bowling_submission && pdflatex bowling_submission && pdflatex bowling_submission)
+/paper/submission/*.aux
+/paper/submission/*.bbl
+/paper/submission/*.blg
+/paper/submission/*.idx
+/paper/submission/*.log
+/paper/submission/*.out

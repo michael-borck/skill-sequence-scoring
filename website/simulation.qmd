@@ -47,7 +47,7 @@ Does the finding hold if we make the simulation more realistic? We tested three 
 
 All three models agree on the direction. More realistic models make the traditional scoring advantage *larger*, not smaller.
 
-![](images/fig13_model_comparison.png)
+![](images/fig12_model_robustness.png)
 
 ## Professional-Level Sequences
 

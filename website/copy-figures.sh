@@ -15,7 +15,7 @@ FIGS=(
   fig9_mean_scores_tiers
   fig10_crossover_analysis
   fig11_professional_sequences
-  fig13_model_comparison
+  fig12_model_robustness
 )
 
 for f in "${FIGS[@]}"; do

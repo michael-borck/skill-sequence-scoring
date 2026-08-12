@@ -188,9 +188,8 @@
 \hypersetup{
   pdftitle={Skill{,} Sequence{,} and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems},
   pdfauthor={Michael Borck},
-  pdfkeywords={ten-pin bowling, scoring systems, combinatorics, skill
-discrimination, sequence sensitivity, World Bowling, Monte Carlo
-simulation},
+  pdfkeywords={combinatorics, Monte Carlo simulation, intraclass
+correlation, hot hand, Markov chains, sports analytics},
   colorlinks=true,
   linkcolor={blue},
   filecolor={Maroon},
@@ -202,43 +201,34 @@ simulation},
 \title{Skill, Sequence, and Scoring: A Mathematical Comparison of
 Traditional and World Bowling Scoring Systems}
 \author{Michael Borck}
-\date{2026-06-15}
+\date{2026-08-13}
 \begin{document}
 \maketitle
 \begin{abstract}
 Ten-pin bowling's traditional scoring system rewards sustained
 performance: strikes and spares earn bonus points from subsequent balls,
-creating dependencies across frames. World Bowling has promoted a
-simpler alternative in which each frame is scored independently. But
-what exactly is lost when these dependencies are removed?
-
-This paper answers that question in two parts. Part 1 uses exact
-combinatorial enumeration to prove that World Bowling scoring is
-mathematically invariant to the order of frames, meaning two players who
-throw identical frames in different sequences always receive the same
-score. Traditional scoring, by contrast, produces a score range of up to
-39 points across different orderings of identical frames. Part 2 uses
-Monte Carlo simulation across six skill tiers, calibrated against PBA
-data, to identify what this invariance costs. We separate signal from
-noise with a variance decomposition and find that the two systems are
-about equally reliable at distinguishing players who differ in raw
-skill: single-game reliability is nearly identical across the full skill
-range, and traditional scoring's larger spread at elite levels (over
-30\% more at the top tier) is mostly within-player noise rather than
-between-player signal. The cost of commutativity is specific and
-different. At a fixed strike rate, traditional scores rise with a
-player's tendency to string strikes together (correlation 0.49 with
-streakiness), whereas World Bowling scores stay flat (correlation
-−0.04). Current-frame scoring does not measure skill less accurately
-overall; it is structurally blind to the one dimension of skill that
-sustained, consecutive striking represents.
-
-We do not argue that current-frame scoring lacks merit. For recreational
-participants, its simplicity is a genuine improvement. Our argument is
-narrower: at the competitive and professional levels, where the ability
-to sustain consecutive strikes distinguishes elite performers,
-current-frame scoring's independence property is blind to a difference
-that traditional scoring records.
+creating dependencies across frames. World Bowling, the international
+governing body, has promoted a simpler alternative in which each frame
+is scored independently. What exactly is lost when these dependencies
+are removed? Part 1 uses exact combinatorial enumeration to prove that
+current-frame scoring is mathematically invariant to the order of
+frames: two players who throw identical frames in different sequences
+always receive the same score, whereas traditional scoring produces a
+range of up to 39 points across orderings of identical frames. Part 2
+uses Monte Carlo simulation across six skill tiers, calibrated against
+Professional Bowlers Association data, to identify what this invariance
+costs. A variance decomposition shows that the two systems are about
+equally reliable at distinguishing players who differ in raw skill:
+single-game reliability is nearly identical across the full skill range,
+and traditional scoring's larger spread at elite levels is mostly
+within-player noise. The cost of commutativity is specific. At a fixed
+strike rate, traditional scores rise with a player's tendency to string
+strikes together (correlation 0.49 with streakiness), whereas
+current-frame scores stay flat (correlation −0.04). Current-frame
+scoring does not measure skill less accurately; it is structurally blind
+to the one dimension of skill that sustained, consecutive striking
+represents. The complexity of traditional scoring is the mechanism by
+which it encodes that dimension.
 \end{abstract}
 
 
@@ -263,10 +253,10 @@ Olympic inclusion, where broadcast accessibility is a key selection
 criterion (\citeproc{ref-insidethegames2014}{Inside The Games, 2014}),
 and has culminated in the launch of international franchise competitions
 using current-frame scoring exclusively
-(\citeproc{ref-reuters2025wbl}{Reuters, 2025}). The question of whether
-this simplification preserves the competitive properties the sport
-requires at the elite level is therefore not academic. It is an active
-governance decision with immediate consequences.
+(\citeproc{ref-reuters2025wbl}{Chakraborty, 2025}). The question of
+whether this simplification preserves the competitive properties the
+sport requires at the elite level is therefore not academic. It is an
+active governance decision with immediate consequences.
 
 A simple example illustrates the core difference. Consider two players
 who each throw five strikes and four spares across frames 1--9, followed
@@ -465,6 +455,13 @@ alone, and addition is commutative and associative, any permutation
 \(\sigma\) of the frames yields
 \(S' = \sum_{i=1}^{10} f_{\sigma(i)} = S\). \(\square\)
 
+The proposition is deliberately elementary: the proof is commutativity
+of addition, and no deeper machinery is needed. We state it formally
+because it is the structural anchor for everything that follows. The
+contribution of this paper is not the proof itself but the
+quantification, in Part 2, of exactly what a scoring system gives up by
+having this property.
+
 This property, commutativity with respect to frame order, does not hold
 for traditional scoring. Under traditional scoring, a strike in frame
 \(i\) depends on balls thrown in frames \(i+1\) and potentially \(i+2\).
@@ -560,28 +557,17 @@ increases further: 5 strikes mixed with 4 open frames (5, 4) produces a
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../figures/fig6_permutation_variance.png}
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../figures/fig6_permutation_analysis.png}
 
 }
 
-\caption{\label{fig-permvar}Left: score range across all orderings by
-composition. Right: score standard deviation due to frame order alone.
-World Bowling is zero throughout.}
-
-\end{figure}%
-
-\begin{figure}[htbp]
-
-\centering{
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../figures/fig7_permutation_distribution.png}
-
-}
-
-\caption{\label{fig-permdist}Score distribution across all orderings for
-three compositions (2, 5, and 7 strikes). Traditional scores spread
-across a range that widens with strike count; World Bowling collapses to
-a single value (dashed line) in every case.}
+\caption{\label{fig-permutation}Sequence sensitivity of fixed frame
+compositions. Top: score range and score standard deviation across all
+orderings, by composition. Bottom: score distribution across all
+orderings for three compositions (2, 5, and 7 strikes). Traditional
+scores spread across a range that widens with strike count; World
+Bowling is exactly zero throughout and collapses to a single value
+(dashed line).}
 
 \end{figure}%
 
@@ -923,24 +909,32 @@ simulate many games per player, score every game under both systems from
 the \emph{same} ball sequences, and decompose the total score variance
 into a between-player component \(\sigma_B^2\) and a within-player
 component \(\sigma_W^2\). The single-game reliability is the intraclass
-correlation \(\text{ICC} = \sigma_B^2 / (\sigma_B^2 + \sigma_W^2)\): the
+correlation \(\text{ICC} = \sigma_B^2 / (\sigma_B^2 + \sigma_W^2)\), the
+single-measurement ICC under a one-way random-effects model: the
 fraction of one game's score variance attributable to real skill
 differences. A higher ICC means a single game more reliably identifies
-the better player.
+the better player. The absolute level of the ICC depends on the
+heterogeneity of the reference population (here a three-point standard
+deviation in true strike rate), so it is the comparison between systems,
+not the level, that is the result of interest; the small remaining
+point-to-point variation in Figure~\ref{fig-reliability} is Monte Carlo
+error.
 
 Two findings emerge (Figure~\ref{fig-reliability}). First, the two
 systems have nearly identical single-game reliability at every skill
-level, differing by less than 0.01 in ICC across the full 10\%--78\%
-strike-rate range. On the axis of raw skill, traditional scoring is no
-better at separating players than World Bowling. Second, the variance
-decomposition explains why traditional scoring's larger elite-level
-spread does not buy discrimination: at the top of the range, almost all
-of the extra spread is noise. At a 78\% strike rate, traditional
-scoring's within-player (noise) standard deviation is about 24 points
-against World Bowling's 17, while the between-player (signal) standard
-deviations are comparable and small (roughly 6 versus 4 points). The
-amplifying bonus structure inflates noise and signal together, leaving
-their ratio, and hence reliability, essentially unchanged.
+level: the ICC estimates differ by less than 0.01 at strike rates above
+roughly 15\%, and by at most 0.025 at the lowest recreational levels,
+where World Bowling is if anything marginally the more reliable measure.
+On the axis of raw skill, traditional scoring is no better at separating
+players than World Bowling. Second, the variance decomposition explains
+why traditional scoring's larger elite-level spread does not buy
+discrimination: at the top of the range, almost all of the extra spread
+is noise. At a 78\% strike rate, traditional scoring's within-player
+(noise) standard deviation is about 24 points against World Bowling's
+17, while the between-player (signal) standard deviations are comparable
+and small (roughly 6 versus 4 points). The amplifying bonus structure
+inflates noise and signal together, leaving their ratio, and hence
+reliability, essentially unchanged.
 
 This result aligns with the between-tier comparison: across adjacent
 skill tiers, both systems produce nearly identical Cohen's \(d\) effect
@@ -1009,9 +1003,10 @@ current-frame scoring discards.
 \caption{\label{fig-streakiness}Left: player mean score against true
 streakiness (\(\phi\)) for a population of players who share an
 identical 66\% strike rate. Traditional scores rise with streakiness;
-World Bowling scores are flat. Right: game-score distributions for a
-streak-free and a maximally streaky player of identical raw skill.
-Traditional scoring shifts; World Bowling does not.}
+World Bowling scores are flat. Middle and right: game-score
+distributions for a streak-free and a maximally streaky player of
+identical raw skill, under traditional scoring and World Bowling
+respectively. Traditional scoring shifts; World Bowling does not.}
 
 \end{figure}%
 
@@ -1019,7 +1014,9 @@ The effect is specific to strikes. Repeating the experiment on the spare
 dimension, holding the strike process independent and instead clustering
 spare \emph{conversions} at a fixed marginal conversion rate, produces
 no signal under either system (traditional \(r = 0.02\), World Bowling
-\(r = 0.01\)). The reason is structural: a strike's bonus looks two
+\(r = 0.01\)). Part of this null is mechanical: at elite conversion
+rates of 86--92\% there is little variance left to cluster. But the
+structural reason is decisive regardless: a strike's bonus looks two
 balls ahead and can chain into a following strike, so consecutive
 strikes compound, whereas a spare's bonus looks only one ball ahead and
 never chains into another bonus. Spare conversion is a genuine skill,
@@ -1041,9 +1038,16 @@ head-to-head series rises from 57\% over a single game to 67\% over a
 six-game block and 90\% over a 48-game tournament, and the series effect
 size grows from \(d = 0.26\) to \(d = 1.79\). Under World Bowling the
 same player's win probability never leaves the neighbourhood of chance
-(53\% even at 48 games). A property that looks minor in a single game
-becomes, over the span of a real competition, frequently decisive under
-traditional scoring and nearly invisible under World Bowling.
+(53\% even at 48 games). These figures should be read as upper bounds on
+the practical stakes: they contrast the extremes of the swept
+streakiness range (\(\phi = 0.35\) versus \(\phi = 0\)), and the
+between-player dispersion of streakiness in real professional
+populations is not yet established. If the population spread of \(\phi\)
+is narrower than the range swept here, the win probabilities move toward
+chance proportionally. Subject to that caveat, a property that looks
+minor in a single game becomes, over the span of a real competition,
+frequently decisive under traditional scoring and nearly invisible under
+World Bowling.
 
 \begin{figure}[htbp]
 
@@ -1174,8 +1178,10 @@ Our central empirical claim is that traditional scoring rewards
 streakiness and World Bowling does not. Whether that is a virtue depends
 on a question our data cannot fully settle: is the tendency to throw
 consecutive strikes a stable, skill-based attribute, or an artefact of
-luck and changing conditions? The hot-hand literature in bowling is
-pointed on exactly this. Dorsey-Palmateer \& Smith
+luck and changing conditions? The hot-hand question, whether streaks
+reflect a causal change in player state or merely the perception of one
+(\citeproc{ref-gilovich1985}{Gilovich et al., 1985}), is pointed on
+exactly this in bowling. Dorsey-Palmateer \& Smith
 (\citeproc{ref-dorseypalmateer2004}{2004}) find positive autocorrelation
 in strike sequences, but Yaari \& Eisenmann
 (\citeproc{ref-yaari2012}{2012}), analysing a large body of data,
@@ -1215,16 +1221,12 @@ improvements over traditional scoring. The simulation results support
 this: below approximately 50\% strike rate, World Bowling produces
 \emph{greater} score spread, and its simpler computation removes a
 barrier to casual participation. The higher Shannon entropy of the World
-Bowling distribution (5.94 bits vs 5.81 bits for traditional; Shannon
-(\citeproc{ref-shannon1948}{1948})) reflects this wider, more even
-spread of scores across the range; entropy here measures dispersion
-rather than discrimination, a distinction our reliability analysis makes
-concrete. A casual player's score therefore more directly reflects their
-raw pin count without the amplifying effect of bonus compounding.
-Entropy and concentration measures have been used as dispersion
-indicators in other sporting contexts with similar descriptive value
-(see \citeproc{ref-ausloos2023}{Ausloos, 2023} for a recent application
-in multi-stage cycling).
+Bowling distribution (5.94 vs 5.81 bits; Shannon
+(\citeproc{ref-shannon1948}{1948})) reflects this wider spread, since
+entropy here measures dispersion rather than discrimination, a
+distinction our reliability analysis makes concrete. A casual player's
+score therefore more directly reflects their raw pin count without the
+amplifying effect of bonus compounding.
 
 Our argument is narrower, and the reliability analysis sharpens it. At
 the competitive and professional levels, where strike rates exceed 50\%
@@ -1235,6 +1237,17 @@ blind to the sequencing dimension that traditional scoring records
 49\% strike rate is not the basis of this argument; it marks where the
 score scale changes character, not where discrimination of skill
 reverses.
+
+Nor is the choice binary. Traditional and current-frame scoring are two
+points in a design space, not the whole space. A governing body that
+valued both accessibility and sequencing could adopt a hybrid:
+current-frame base scoring with an explicit consecutive-strike bonus
+(for example, a fixed supplement for a double or turkey) would recover
+much of the sequencing signal at a fraction of traditional scoring's
+computational complexity. Our framework supplies the tools to evaluate
+such designs: enumerate the distribution, measure the sequence
+sensitivity, and estimate the reliability before changing the rules.
+Mapping that design space is a natural extension of this work.
 
 \subsection{Score Compression at the Elite
 Level}\label{score-compression-at-the-elite-level}
@@ -1259,37 +1272,45 @@ raw skill but resolution of \emph{sequencing}, which
 Figure~\ref{fig-streakiness} shows traditional scoring records and World
 Bowling cannot.
 
-\subsection{Recency Bias and the Perception of
-Unfairness}\label{recency-bias-and-the-perception-of-unfairness}
+\subsection{End-Loading and the Perception of
+Unfairness}\label{end-loading-and-the-perception-of-unfairness}
 
-A common informal argument against traditional scoring takes the
-following form: consider Player A, who throws a spare in frame 1 and
-then strikes for the remainder of the game, and Player B, who strikes
-from frame 1 but finishes with an open frame. Many observers intuitively
-feel Player A (who finished on a strong run) should score as well or
-better than Player B, who faltered at the end. Under traditional
-scoring, Player B scores higher, because the early strikes compound
-forward into subsequent strikes.
+Sequence sensitivity has a second, less obvious asymmetry beyond the
+reward gradient: under traditional scoring, a ball thrown late in the
+game contributes more to the total than the same ball thrown early.
+Every ball enters the score up to three times, once in its own frame and
+once in each of up to two preceding frames as a bonus, so the balls of
+frame 1 enter exactly one frame-score while the balls of frame 9 can
+enter three. A weak frame is correspondingly cheaper early than late.
+Holding the frame composition fixed, a player who throws nine strikes
+and one spare (5,5) scores 290 if the spare comes first but 270 if it
+comes last; with nine strikes and one open frame (9,0), the scores are
+279 and 267. Under World Bowling both orderings score identically (285
+and 279 respectively). The tenth-frame open is, structurally, the most
+expensive mistake in traditional scoring.
 
-This intuition is an instance of \textbf{recency bias}, the cognitive
-tendency to weight recent events more heavily than earlier ones
-(\citeproc{ref-gilovich1985}{Gilovich et al., 1985}). Traditional
-scoring does not correct for recency bias; it actively works against it,
-valuing the full sequence of the game from the first ball. The
-perception that this is unfair reflects a human cognitive bias rather
-than a deficiency in the scoring system. World Bowling scoring, by
-treating each frame independently, implicitly accommodates recency bias.
-However, in doing so it loses the ability to distinguish the player who
-sustained excellence throughout from the one who achieved the same pin
-count in a less demanding sequence. The hot-hand literature, extensively
-reviewed by Bar-Eli et al. (\citeproc{ref-bareli2006}{2006}) and
-investigated in bowling specifically by Yaari \& Eisenmann
-(\citeproc{ref-yaari2012}{2012}) and Dorsey-Palmateer \& Smith
-(\citeproc{ref-dorseypalmateer2004}{2004}), documents that strike
-sequences are autocorrelated rather than independent, though it disputes
-whether the cause is a causal hot hand or shared dependence on session
-conditions. Either way, the sequencing exists in the record; whether a
-scoring system should reflect it is the normative question discussed
+This end-loading is the source of a recurring informal complaint about
+traditional scoring: two players who throw identical frames in different
+orders receive different scores, and the difference is not symmetric,
+because the system forgives a slow start more readily than a weak
+finish. What the complaint identifies is not a flaw but a design
+property. Traditional scoring places a premium on the closing frames,
+much as other sports reward performance in high-leverage moments.
+Whether this clutch premium is desirable, whether the sport wants the
+tenth frame to matter most, is a normative question, and it is the same
+question the sequencing result poses from another angle: current-frame
+scoring is neutral to order, treating a strike in frame 1 and a strike
+in frame 10 as identical events.
+
+The hot-hand literature, extensively reviewed by Bar-Eli et al.
+(\citeproc{ref-bareli2006}{2006}) and investigated in bowling
+specifically by Yaari \& Eisenmann (\citeproc{ref-yaari2012}{2012}) and
+Dorsey-Palmateer \& Smith (\citeproc{ref-dorseypalmateer2004}{2004}),
+documents that strike sequences are autocorrelated rather than
+independent, though it disputes whether the cause is a causal hot hand
+or shared dependence on session conditions. Either way, both the
+sequencing and the end-loading exist in the scoring record; whether a
+scoring system should reflect them is the normative question discussed
 above.
 
 \subsection{The 290--299 Gap as a Design
@@ -1321,45 +1342,33 @@ To test the sensitivity of our conclusions to this assumption, we
 compare three simulation models of increasing realism: the independent
 base case, a simple momentum model (±5\% strike probability shift after
 strikes/opens), and a first-order Markov chain with leave-dependent
-spare difficulty (Section 6.2). Figure~\ref{fig-models} shows the SD gap
-(traditional minus World Bowling) across all six skill tiers under each
-model. Two observations are immediate. First, all three models agree on
-the \emph{direction} of the effect at every tier: World Bowling provides
-more spread below competitive level, and traditional scoring provides
-more spread above it. The crossover point is robust to model choice.
-Second, the more realistic models produce \emph{larger} gaps at the
-professional and Top 10 levels: the Markov model yields a traditional
-scoring advantage of +5.8 SD points at the Top 10 tier, compared to +4.1
-under independence. The independence assumption is therefore
-conservative: any realistic model of sequential dependence amplifies the
-effect.
+spare difficulty (Section 6.2). Figure~\ref{fig-robustness} shows the
+score standard deviations and the SD gap (traditional minus World
+Bowling) across all six skill tiers under each model. Two observations
+are immediate. First, all three models agree on the \emph{direction} of
+the effect at every tier: World Bowling provides more spread below
+competitive level, and traditional scoring provides more spread above
+it. The crossover point is robust to model choice. Second, the more
+realistic models produce \emph{larger} gaps at the professional and Top
+10 levels: the Markov model yields a traditional scoring advantage of
++5.8 SD points at the Top 10 tier, compared to +4.1 under independence.
+The independence assumption is therefore conservative: any realistic
+model of sequential dependence amplifies the effect.
 
 \begin{figure}[htbp]
 
 \centering{
 
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../figures/fig13_model_comparison.png}
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../figures/fig12_model_robustness.png}
 
 }
 
-\caption{\label{fig-models}SD gap (Traditional minus World Bowling)
-across all six skill tiers under three simulation models: independent,
-momentum, and Markov chain with spare difficulty. More realistic models
-amplify the traditional scoring advantage at elite tiers.}
-
-\end{figure}%
-
-\begin{figure}[htbp]
-
-\centering{
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../figures/fig12_momentum_comparison.png}
-
-}
-
-\caption{\label{fig-momentum}Left: score standard deviation under
-independent and momentum models. Right: the SD gap between systems
-widens under momentum at elite tiers.}
+\caption{\label{fig-robustness}Robustness across simulation models.
+Left: score standard deviation by skill tier under independent and
+momentum models. Middle: SD gap (traditional minus World Bowling) by
+tier under each. Right: SD gap under all three models, including the
+Markov chain with spare difficulty. More realistic models amplify the
+traditional scoring advantage at elite tiers.}
 
 \end{figure}%
 
@@ -1375,27 +1384,36 @@ reported by McCarthy (\citeproc{ref-mccarthy2011}{2011}) closely:
 simulated mean 204.4 and standard deviation 31.5, against the published
 205.65 and 31.91. This confirms that the model reproduces the real
 aggregate score distribution and not merely its mean, but it is not a
-substitute for ball-by-ball validation. Applying both scoring systems to
-a database of actual PBA tournament games, and re-estimating the
-reliability and streakiness results on real strike sequences, would
-provide a far stronger empirical anchor. Second, while the Markov chain
-model captures first-order sequential dependence, more sophisticated
-models incorporating fatigue, lane oil breakdown, and frame-specific
-strategy could further refine the magnitude estimates. Third, we show
-that the per-game sequencing effect compounds over a multi-game series
-under an independence assumption (Figure~\ref{fig-series}), but a fuller
-tournament-format treatment, incorporating within-session correlation
-between games (shared lane conditions and form), bracket structures, and
-qualifying cuts, would sharpen the estimate of how often sequencing
-actually decides real competitions. Because positive within-session
-correlation would let a streaky player's advantage persist across games
-rather than average out, the independence assumption here is again
-likely conservative. Fourth, a formal Win Probability Added (WPA)
-analysis, computing how each scoring system affects the probability of
-winning a head-to-head match at each game state, would complement the
-present score-distribution analysis with a competition-dynamics
-perspective. The source code accompanying this paper is designed to
-support these extensions.
+substitute for ball-by-ball validation. We want to be precise about the
+scope of this limitation: the calibration validates the model's
+\emph{marginal} behaviour (score means and spreads by tier), while the
+paper's headline claims concern \emph{sequential} structure, and the
+sequential inputs, the Markov transition ratios and the spare
+leave-class probabilities, are assumed from published ranges rather than
+fitted to ball-by-ball data. Applying both scoring systems to a database
+of actual PBA tournament games, and re-estimating the reliability and
+streakiness results on real strike sequences, would provide a far
+stronger empirical anchor, and it is the most important extension of
+this work. Second, while the Markov chain model captures first-order
+sequential dependence, more sophisticated models incorporating fatigue,
+lane oil breakdown, and frame-specific strategy could further refine the
+magnitude estimates. Third, we show that the per-game sequencing effect
+compounds over a multi-game series under an independence assumption
+(Figure~\ref{fig-series}), but a fuller tournament-format treatment,
+incorporating within-session correlation between games (shared lane
+conditions and form), bracket structures, and qualifying cuts, would
+sharpen the estimate of how often sequencing actually decides real
+competitions. The direction of this effect is genuinely uncertain: if
+streakiness is a persistent player attribute, within-session correlation
+lets the streaky player's advantage persist across games, making our
+estimate conservative; but if streaks are driven by lane conditions
+shared with the opponent on the same pair, the \emph{differential}
+between players could instead shrink. Fourth, a formal Win Probability
+Added (WPA) analysis, computing how each scoring system affects the
+probability of winning a head-to-head match at each game state, would
+complement the present score-distribution analysis with a
+competition-dynamics perspective. The source code accompanying this
+paper is designed to support these extensions.
 
 \section{Conclusion}\label{conclusion}
 
@@ -1439,12 +1457,15 @@ ways:
   World Bowling scores stay flat (correlation −0.04). World Bowling is
   not merely a noisier measure of this dimension; by commutativity
   (Proposition 1) it is structurally blind to it. The per-game effect is
-  moderate but compounds: a streakier player of identical raw skill wins
-  a head-to-head 48-game tournament about 90\% of the time under
-  traditional scoring, against roughly chance (53\%) under World
-  Bowling. The advantage is specific to strikes; clustering spare
-  conversions carries no signal under either system. This is the
-  property the choice between the two systems actually turns on.
+  moderate but compounds: as an upper bound, a maximally streaky player
+  versus a streak-free player of identical raw skill wins a head-to-head
+  48-game tournament about 90\% of the time under traditional scoring,
+  against roughly chance (53\%) under World Bowling, with the true
+  figure depending on the dispersion of streakiness in the population,
+  which is not yet established. The advantage is specific to strikes;
+  clustering spare conversions carries no signal under either system.
+  This is the property the choice between the two systems actually turns
+  on.
 \end{enumerate}
 
 The complexity of traditional scoring is not an accident of history. It
@@ -1494,12 +1515,6 @@ decisions are the author's own.
 
 \protect\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\bibitem[\citeproctext]{ref-ausloos2023}
-Ausloos, M. (2023). Shannon entropy and {Herfindahl-Hirschman} index as
-team performance indicators in cyclist multi-stage races.
-\emph{Entropy}, \emph{25}(6), 955.
-\url{https://doi.org/10.3390/e25060955}
-
 \bibitem[\citeproctext]{ref-balmoral}
 Balmoral Software. (2019). \emph{All about bowling scores}.
 \url{http://www.balmoralsoftware.com/bowling/bowling.htm}.
@@ -1509,6 +1524,11 @@ Bar-Eli, M., Avugos, S., \& Raab, M. (2006). Twenty years of {``hot
 hand''} research: Review and critique. \emph{Psychology of Sport and
 Exercise}, \emph{7}(6), 525--553.
 \url{https://doi.org/10.1016/j.psychsport.2006.03.001}
+
+\bibitem[\citeproctext]{ref-reuters2025wbl}
+Chakraborty, A. (2025). \emph{Exclusive: {Betts}-backed {World Bowling
+League} to roll out next year}. Reuters.
+\url{https://www.reuters.com/sports/cricket/betts-backed-world-bowling-league-roll-out-next-year-2025-06-13/}
 
 \bibitem[\citeproctext]{ref-cooper1990}
 Cooper, C. N., \& Kennedy, R. E. (1990). A generating function for the
@@ -1558,11 +1578,6 @@ McCarthy, D. (2011). Estimating different sources of variation and
 predicting tournament outcomes in professional bowling. \emph{Chance},
 \emph{24}(3), 37--46.
 \url{https://doi.org/10.1080/09332480.2011.10739870}
-
-\bibitem[\citeproctext]{ref-reuters2025wbl}
-Reuters. (2025). \emph{Exclusive: {Betts}-backed {World Bowling League}
-to roll out next year}. Reuters Sports News.
-\url{https://www.reuters.com/sports/}
 
 \bibitem[\citeproctext]{ref-shannon1948}
 Shannon, C. E. (1948). A mathematical theory of communication.
