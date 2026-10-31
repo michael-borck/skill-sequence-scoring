@@ -10,3 +10,4 @@ composition,n_permutations,trad_min,trad_max,trad_range,trad_mean,trad_stdev,wor
 "3 strikes + 6 opens(5,4)",84,120,137,17,124.4,4.8,153,153,0,153.0,0.0
 "5 strikes + 4 opens(5,4)",126,140,179,39,157.5,8.5,195,195,0,195.0,0.0
 "3X + 3sp + 3 opens(4,3)",1680,126,155,29,139.2,5.1,165,165,0,165.0,0.0
+"5 strikes + 4 opens(0,0)",126,68,143,75,95.9,15.2,159,159,0,159.0,0.0

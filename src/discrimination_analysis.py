@@ -121,7 +121,7 @@ def _simulate_player(rng, p_strike, p_spare, pin_mean, n_games, model='independe
 # ── Analysis 1: reliability (ICC) as a function of skill ──────────────────────
 
 def reliability_vs_skill(strike_rates=None, n_players=120, n_games=60,
-                         sigma_skill=0.03, seed=20240601):
+                         sigma_skill=0.03, seed=20240601, n_boot=1000):
     """
     At each target strike rate, build a population of players whose true strike
     rates differ by a realistic amount (sigma_skill, in strike-rate points), then
@@ -135,6 +135,9 @@ def reliability_vs_skill(strike_rates=None, n_players=120, n_games=60,
         strike_rates = np.linspace(0.10, 0.78, 18)
 
     rng = np.random.default_rng(seed)
+    # Separate stream for the player bootstrap, so adding intervals does not
+    # change the simulated point estimates.
+    boot_rng = np.random.default_rng(seed + 7919)
     rows = []
     print('\n' + '=' * 78)
     print('  RELIABILITY (ICC) vs SKILL  —  signal / (signal + noise) per game')
@@ -162,9 +165,27 @@ def reliability_vs_skill(strike_rates=None, n_players=120, n_games=60,
 
         td = icc_oneway(trad_mat)
         wd = icc_oneway(world_mat)
+
+        boot_t, boot_w, boot_d = [], [], []
+        for _ in range(n_boot):
+            idx = boot_rng.integers(0, n_players, n_players)
+            ti = icc_oneway(trad_mat[idx])['icc']
+            wi = icc_oneway(world_mat[idx])['icc']
+            boot_t.append(ti)
+            boot_w.append(wi)
+            boot_d.append(ti - wi)
+
+        def _ci(x):
+            return (float(np.percentile(x, 2.5)),
+                    float(np.percentile(x, 97.5)))
+
         rows.append({
             'strike_rate': float(s0),
             'trad_icc': td['icc'], 'world_icc': wd['icc'],
+            'trad_icc_lo': _ci(boot_t)[0], 'trad_icc_hi': _ci(boot_t)[1],
+            'world_icc_lo': _ci(boot_w)[0], 'world_icc_hi': _ci(boot_w)[1],
+            'diff': td['icc'] - wd['icc'],
+            'diff_lo': _ci(boot_d)[0], 'diff_hi': _ci(boot_d)[1],
             'trad_sigma_b': td['sigma_between'], 'world_sigma_b': wd['sigma_between'],
             'trad_sigma_w': td['sigma_within'], 'world_sigma_w': wd['sigma_within'],
         })

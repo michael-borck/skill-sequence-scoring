@@ -118,7 +118,9 @@ def fig_reward_gradient():
     non-strike fill patterns, demonstrating the compounding effect is
     structural and not dependent on the specific fill chosen.
     """
-    from bowling_analysis import score_traditional, score_world
+    from bowling_analysis import (
+        score_traditional, score_world, game_with_n_strikes,
+    )
 
     fills = [
         ('Weak open (3,2)', 3, 2),
@@ -131,25 +133,18 @@ def fig_reward_gradient():
     for idx, (fill_label, b1, b2) in enumerate(fills):
         ax = axes[idx]
 
-        def game_with_n_strikes(n):
-            balls = [10] * n
-            remaining = 10 - n
-            for _ in range(remaining):
-                balls += [b1, b2]
-            if n == 10:
-                balls = [10] * 12
-            elif n == 9:
-                balls[-2:] = [10, b1, b2]
-            return balls
+        # Strikes 0-9 only: the tenth strike is a three-ball event (it brings its
+        # own two bonus balls) and is not comparable with the interior marginals.
+        strikes = list(range(10))
+        trad_scores = [score_traditional(game_with_n_strikes(n, (b1, b2)))
+                       for n in strikes]
+        world_scores = [score_world(game_with_n_strikes(n, (b1, b2)))
+                        for n in strikes]
 
-        strikes = list(range(11))
-        trad_scores = [score_traditional(game_with_n_strikes(n)) for n in strikes]
-        world_scores = [score_world(game_with_n_strikes(n)) for n in strikes]
+        trad_marginal = [trad_scores[i] - trad_scores[i-1] for i in range(1, 10)]
+        world_marginal = [world_scores[i] - world_scores[i-1] for i in range(1, 10)]
 
-        trad_marginal = [trad_scores[i] - trad_scores[i-1] for i in range(1, 11)]
-        world_marginal = [world_scores[i] - world_scores[i-1] for i in range(1, 11)]
-
-        x = list(range(1, 11))
+        x = list(range(1, 10))
         ax.bar([i - 0.18 for i in x], trad_marginal, width=0.35,
                label=TRAD_LABEL, **TRAD_BAR)
         ax.bar([i + 0.18 for i in x], world_marginal, width=0.35,

@@ -9,7 +9,7 @@ Dear Dr VanDerwerken,
 
 I am writing with reference to your 2018 JQAS paper "A generative Markov model for bowling scores," which I cite extensively in my current research comparing traditional and World Bowling scoring systems.
 
-My paper uses your published posterior estimates (Tables 5–8) to calibrate a Markov chain simulation comparing the two scoring systems across skill tiers. The results demonstrate that traditional scoring provides substantially greater score discrimination at the professional level — a finding that is robust across independent, momentum, and Markov models.
+My paper, prepared for submission to the Journal of Quantitative Analysis in Sports, uses your published posterior estimates (Tables 5–8) to calibrate a Markov chain simulation comparing the two scoring systems across skill tiers. The results show that the two systems are about equally reliable at distinguishing raw skill, but that traditional scoring alone records *sequencing* — the ability to string strikes together — which current-frame scoring is structurally unable to measure. The finding is robust across independent, momentum, and Markov models.
 
 I am writing to ask whether you would be willing to share the PBA ball-by-ball dataset originally provided by Ben Blatt. Access to the raw frame-by-frame data would allow me to:
 

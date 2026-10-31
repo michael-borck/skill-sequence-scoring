@@ -93,6 +93,35 @@ def analyse_composition(frame_types, label, frame_10=(5, 4)):
     return result
 
 
+def max_range_search(frame_10=(5, 4)):
+    """
+    Exhaustive search over compositions of the form k strikes plus (9-k)
+    identical non-strike frames, for every legal non-strike frame type, with a
+    neutral tenth frame. Returns the composition with the widest traditional
+    score range across orderings, plus one row per composition tested.
+    """
+    strike = 10
+    # Every legal non-strike frame: (a, b) with a + b <= 10, a < 10.
+    frame_types = [(a, b) for a in range(10) for b in range(11 - a)]
+    best = None
+    rows = []
+    for k in range(0, 9):
+        m = 9 - k
+        for f in frame_types:
+            r = analyse_composition(tuple([strike] * k + [f] * m),
+                                    f'{k} strikes + {m} x {f}', frame_10)
+            rows.append({
+                'n_strikes': k, 'frame': str(f),
+                'n_permutations': r['n_permutations'],
+                'trad_min': r['trad_min'], 'trad_max': r['trad_max'],
+                'trad_range': r['trad_range'],
+                'world_range': r['world_range'],
+            })
+            if best is None or r['trad_range'] > best['trad_range']:
+                best = r
+    return best, rows
+
+
 def main():
     os.makedirs(FIGURES_DIR, exist_ok=True)
     os.makedirs(DATA_DIR, exist_ok=True)
@@ -102,6 +131,7 @@ def main():
     spare = (5, 5)
     open_9 = (5, 4)
     open_7 = (4, 3)
+    gutter = (0, 0)
 
     # Compositions to analyse (9 frames each)
     compositions = [
@@ -131,6 +161,8 @@ def main():
          '5 strikes + 4 opens(5,4)'),
         (3, [strike]*3 + [spare]*3 + [open_7]*3,
          '3X + 3sp + 3 opens(4,3)'),
+        (5, [strike]*5 + [gutter]*4,
+         '5 strikes + 4 opens(0,0)'),
     ]
 
     print('=' * 75)
@@ -169,6 +201,19 @@ def main():
                 f"{r['world_mean']:.1f}", f"{r['world_stdev']:.1f}",
             ])
     print(f'\nResults saved to: {csv_path}')
+
+    # ── Exhaustive search for the widest range over all two-type compositions ──
+    best, range_rows = max_range_search()
+    range_path = os.path.join(DATA_DIR, 'sequence_range_by_composition.csv')
+    with open(range_path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=list(range_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(range_rows)
+    print(f'\nWidest traditional range over all k-strike + (9-k)-identical-frame '
+          f'compositions: {best["trad_range"]} points')
+    print(f'  Composition: {best["label"]}  (scores {best["trad_min"]}-'
+          f'{best["trad_max"]}; World Bowling range {best["world_range"]})')
+    print(f'Results saved to: {range_path}')
 
     # ── Figure 6: Combined permutation analysis (2 rows) ─────────────────────
     # Top row: score range and SD by composition. Bottom row: score
@@ -251,8 +296,10 @@ def main():
     print('=' * 75)
     print(f'\nFor every composition tested:')
     print(f'  - World Bowling score range: 0 (order is irrelevant)')
-    print(f'  - Traditional score range: up to {max(trad_ranges)} points')
-    print(f'  - Traditional std deviation: up to {max(trad_stdevs):.1f}')
+    print(f'  - Traditional score range: up to '
+          f'{max(r["trad_range"] for r in all_results)} points')
+    print(f'  - Traditional std deviation: up to '
+          f'{max(r["trad_stdev"] for r in all_results):.1f}')
     print(f'\nThis confirms Proposition 4.1 (commutativity) empirically')
     print(f'and quantifies the sequence information lost by World Bowling.')
 

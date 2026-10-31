@@ -102,6 +102,23 @@ def score_world(balls):
     return score
 
 
+# ── Shared construction: n consecutive strikes then open frames ───────────────
+
+def game_with_n_strikes(n, fill=(5, 4)):
+    """
+    Build a valid game with n consecutive strikes in frames 1..n, followed by
+    open frames of value `fill` filling the remaining frames and the tenth frame.
+    For n == 10 the tenth frame is a strike and receives its two bonus balls.
+
+    This is the construction used both by the reward-gradient table and figure;
+    keeping it in one place prevents the two from drifting apart.
+    """
+    b1, b2 = fill
+    if n == 10:
+        return [10] * 12
+    return [10] * n + [b1, b2] * (9 - n) + [b1, b2]
+
+
 # ── Analysis 1: Sequence Sensitivity ──────────────────────────────────────────
 
 def sequence_sensitivity():
@@ -208,31 +225,13 @@ def strike_reward_gradient():
     print("  Marginal value of Nth consecutive strike")
     print("=" * 65)
 
-    # Build a game: N strikes in frames 1..N, then open frames (5,4)
-    def game_with_n_strikes(n):
-        balls = [10] * n
-        remaining = 10 - n
-        for _ in range(remaining):
-            balls += [5, 4]
-        # frame 10: open
-        if n == 10:
-            balls += [10, 10, 10]   # perfect game
-        elif n == 9:
-            balls += [10, 5, 4]
-        else:
-            balls += [5, 4]
-        return balls
-
     print(f"\n{'Strikes':>8} {'Trad Score':>12} {'World Score':>12} "
           f"{'Trad Marginal':>14} {'World Marginal':>15}")
     print("-" * 65)
 
     prev_t = prev_w = None
-    for n in range(0, 13):
-        if n <= 10:
-            balls = game_with_n_strikes(n)
-        else:
-            break
+    for n in range(0, 11):
+        balls = game_with_n_strikes(n)
         t = score_traditional(balls)
         w = score_world(balls)
         if t is None or w is None:
@@ -247,8 +246,12 @@ def strike_reward_gradient():
         print(f"{n:>8} {t:>12} {w:>12} {mt_str:>14} {mw_str:>15}")
         prev_t, prev_w = t, w
 
-    print("\nTraditional: marginal value INCREASES with each strike (compounding).")
-    print("World Bowling: marginal value is FLAT at 30 per strike (linear).")
+    print("\nTraditional: the first two strikes are discounted (+10, +16); from")
+    print("the third strike onward every strike in the run is worth +21, the same")
+    print("as World Bowling. The +37 at the tenth frame is a three-ball artefact")
+    print("(a tenth-frame strike also adds its two bonus balls), not an interior")
+    print("marginal. What compounds is the total score of a run, not the")
+    print("marginal value of each successive strike.")
 
 
 # ── Analysis 3: Score Entropy (Information Content) ───────────────────────────

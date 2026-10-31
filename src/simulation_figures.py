@@ -217,7 +217,9 @@ def fig_model_robustness():
     Combined robustness figure: score spread under independent vs momentum
     models, and the SD gap across all three simulation models (independent,
     momentum, Markov chain with spare difficulty). Shows that more realistic
-    models amplify the traditional scoring advantage.
+    models change the magnitude of the traditional scoring advantage: the
+    momentum model amplifies it, while the Markov model is close to independence
+    at the top tier. The direction is robust.
     """
     tier_names = list(SKILL_TIERS.keys())
     n_games = 30_000
