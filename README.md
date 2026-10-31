@@ -4,6 +4,8 @@
 
 Research project and paper for the *Journal of Quantitative Analysis in Sports* (JQAS).
 
+**Interactive companion site:** <https://michael-borck.github.io/skill-sequence-scoring/>
+
 ## Overview
 
 This project provides exact combinatorial analysis of both traditional ten-pin bowling scoring and the World Bowling current-frame scoring system, comparing them across four dimensions:
@@ -58,9 +60,38 @@ cd src && python bowling_simulation.py
 # bootstrap crossover CI, and face-validity check against published PBA moments
 cd src && python discrimination_analysis.py
 
+# Bootstrap CIs (r, d, ICC difference), spread gaps under all three models,
+# PBA-average moments, and the 48-game win-probability sensitivity sweep
+cd src && python robustness_extras.py
+
+# Exhaustive search over two-type frame compositions (max ordering range = 75)
+cd src && python sequence_permutations.py
+
 # Regenerate all figures
 cd src && python bowling_visualisations.py && python simulation_figures.py && python discrimination_figures.py
 ```
+
+### Building the manuscript
+
+`paper/figures` is a symlink to the repository-level `figures/` directory, so the
+manuscript renders from `paper/` under every engine.
+
+```bash
+cd paper
+
+# HTML (no external engine required)
+quarto render bowling_paper.qmd --to html
+
+# Typst PDF (no LaTeX required; renders to bowling_paper.pdf)
+quarto render bowling_paper.qmd --to typst
+
+# LaTeX PDF (requires a TeX installation, e.g. TinyTeX)
+quarto render bowling_paper.qmd --to pdf
+```
+
+The De Gruyter submission package in `paper/submission/` is a separate LaTeX
+conversion; it must be rebuilt from the current `bowling_paper.qmd` before
+submission (or compiled on Overleaf).
 
 ### Building the website
 

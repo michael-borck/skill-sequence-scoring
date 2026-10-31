@@ -11,7 +11,7 @@ If you replace one open frame with a strike, your total game score goes up. The 
 - A strike under World Bowling scores **30 points**
 - So the marginal value is 30 − 9 = **+21 points** — the same every time, regardless of when you throw it
 
-Under traditional scoring, the marginal value **depends on context**. A lone strike earns only +10 (because the bonus depends on the next two balls, which are just an open frame). But a strike that extends a run of consecutive strikes earns much more — up to +37 for the 10th strike in a perfect game — because it compounds the bonuses of preceding strikes.
+Under traditional scoring, the marginal value **depends on context**, but it does not keep rising with the length of the run. The first two strikes of a run are discounted (+10 and +16) because their bonus balls fall on open frames. From the third strike onward every strike in the run is worth **+21** — exactly the same as under World Bowling. What compounds is the *total* value of the run, not the marginal value of each successive strike. The +37 for the 10th strike is a different kind of event: a tenth-frame strike is a three-ball strike, so it also adds its two bonus balls.
 
 Use the slider below to see this in action. Try changing the fill type to confirm the pattern holds regardless of what the non-strike frames score.
 
@@ -89,14 +89,12 @@ gradientData = {
   let rows = [];
   for (let n = 0; n <= 10; n++) {
     let balls = [];
-    for (let i = 0; i < n; i++) balls.push(10);
-    let remaining = 10 - n;
-    for (let i = 0; i < remaining; i++) balls = balls.concat(fillBalls);
     if (n === 10) {
-      balls = [10,10,10,10,10,10,10,10,10,10,10,10];
-    } else if (n === 9) {
-      balls.pop(); balls.pop();
-      balls.push(10);
+      balls = Array(12).fill(10);
+    } else {
+      for (let i = 0; i < n; i++) balls.push(10);
+      // open frames filling frames n+1..9 and the tenth frame
+      for (let i = 0; i < 9 - n; i++) balls = balls.concat(fillBalls);
       balls = balls.concat(fillBalls);
     }
     let t = scoreTraditional(balls);
@@ -193,7 +191,7 @@ Inputs.table(gradientData, {
 
 ## What to notice
 
-- **Traditional marginal value increases** as the run extends — the 10th strike is worth far more than the 1st
-- **World Bowling marginal is flat** — every strike adds the same amount regardless of context
-- Change the fill type to see that this pattern holds regardless of what the non-strike frames score
-- The compounding effect is a structural property of the bonus system, not an artefact of any particular example
+- **Traditional marginal value is +10, +16, then flat at +21** — it does not keep rising as the run extends
+- **World Bowling marginal is flat at +21** — every strike adds the same amount regardless of context
+- **The tenth strike's +37 is a three-ball artefact**, not a compounding bonus: the tenth-frame strike also adds its two bonus balls
+- Change the fill type to confirm the +10/+16/+21 pattern is structural, not an artefact of the non-strike value

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -40,10 +43,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6033a600180109c3731f6a886c29932c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9d96f532d65220ca877c0304385df42f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -166,16 +169,16 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="the-paper">The Paper</h2>
 <p><strong>Skill, Sequence, and Scoring: A Mathematical Comparison of Traditional and World Bowling Scoring Systems</strong></p>
 <p><em>Michael Borck</em> School of Marketing and Management, Curtin University, Perth, Australia</p>
-<p>Target journal: <em>Journal of Quantitative Analysis in Sports</em></p>
+<p>Prepared for submission to the <em>Journal of Quantitative Analysis in Sports</em>.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>This paper demonstrates, through exact combinatorial analysis and Monte Carlo simulation, that traditional and World Bowling scoring systems differ in mathematically precise and practically significant ways:</p>
 <ol type="1">
-<li>Traditional scoring is <strong>sequence-sensitive</strong> — the order of frames matters. World Bowling is commutative — order is irrelevant.</li>
-<li>Traditional scoring has a <strong>compounding reward gradient</strong> — each consecutive strike is worth more. World Bowling is linear.</li>
-<li>The scoring systems’ discriminating power <strong>crosses over at ~50% strike rate</strong> — below this, World Bowling provides more spread; above it, traditional provides 33% more at the professional level.</li>
-<li>The distinction matters most <strong>within skill tiers</strong> — both systems separate recreational from professional players, but only traditional scoring separates elite players who differ in streak ability.</li>
+<li>Traditional scoring is <strong>sequence-sensitive</strong> — the order of frames matters, and the same frame composition can span up to 75 points across orderings. World Bowling is commutative — order is irrelevant.</li>
+<li>Traditional scoring carries a <strong>strike-run premium</strong> — a strike in a run earns the full 21-point premium over an open frame, while an isolated strike earns only 10. The total value of a run is non-linear, although the marginal value of extending a long run is constant. World Bowling is modular: every strike is worth the same 30 points.</li>
+<li>The score-spread curves cross at a <strong>48.7% strike rate</strong>, but this is <strong>not a crossover in discrimination</strong>. A variance decomposition shows nearly identical single-game reliability (ICC) on raw skill; traditional scoring’s wider spread at elite levels is mostly within-player noise.</li>
+<li>The <strong>exclusive advantage of traditional scoring is sequencing</strong>. At a fixed strike rate, traditional scores track streakiness (r = 0.49) while World Bowling is structurally blind to it (r = −0.04). The per-game effect is moderate but compounds over a series: as an upper bound, a maximally streaky player wins about 90% of 48-game traditional series against a streak-free player of identical skill, against roughly chance under current-frame scoring.</li>
 </ol>
 </section>
 <section id="reproducibility" class="level2">
@@ -184,7 +187,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong><a href="https://github.com/michael-borck/skill-sequence-scoring">github.com/michael-borck/skill-sequence-scoring</a></strong></p>
 <section id="requirements" class="level3">
 <h3 class="anchored" data-anchor-id="requirements">Requirements</h3>
-<pre><code>pip install matplotlib numpy scipy pandas pytest</code></pre>
+<pre><code>pip install -r requirements.txt</code></pre>
 </section>
 <section id="key-files" class="level3">
 <h3 class="anchored" data-anchor-id="key-files">Key files</h3>
@@ -206,11 +209,19 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><code>src/bowling_analysis.py</code></td>
-<td>Scoring functions and sequence sensitivity</td>
+<td>Scoring functions, sequence sensitivity, reward gradient</td>
 </tr>
 <tr class="odd">
 <td><code>src/bowling_simulation.py</code></td>
-<td>Monte Carlo simulation across skill tiers</td>
+<td>Monte Carlo simulation across six skill tiers</td>
+</tr>
+<tr class="even">
+<td><code>src/discrimination_analysis.py</code></td>
+<td>Reliability (ICC), streakiness, series compounding, bootstrap</td>
+</tr>
+<tr class="odd">
+<td><code>src/robustness_extras.py</code></td>
+<td>Bootstrap CIs, model robustness, PBA-average moments, sensitivity sweep</td>
 </tr>
 <tr class="even">
 <td><code>src/sequence_permutations.py</code></td>
@@ -218,17 +229,21 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td><code>src/bowling_visualisations.py</code></td>
-<td>Figure generation (1–5)</td>
+<td>Figures 1–5</td>
 </tr>
 <tr class="even">
 <td><code>src/simulation_figures.py</code></td>
-<td>Figure generation (8–11)</td>
+<td>Figures 8–12</td>
 </tr>
 <tr class="odd">
+<td><code>src/discrimination_figures.py</code></td>
+<td>Figures 14–16</td>
+</tr>
+<tr class="even">
 <td><code>data/bowling_distributions.csv</code></td>
 <td>Full 0–300 score distribution tables</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>paper/bowling_paper.qmd</code></td>
 <td>Quarto manuscript source</td>
 </tr>

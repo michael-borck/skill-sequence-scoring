@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -40,10 +43,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6033a600180109c3731f6a886c29932c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9d96f532d65220ca877c0304385df42f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -131,7 +134,9 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#skill-tiers" id="toc-skill-tiers" class="nav-link active" data-scroll-target="#skill-tiers">Skill Tiers</a></li>
   <li><a href="#score-distributions-by-tier" id="toc-score-distributions-by-tier" class="nav-link" data-scroll-target="#score-distributions-by-tier">Score Distributions by Tier</a></li>
-  <li><a href="#the-crossover-point" id="toc-the-crossover-point" class="nav-link" data-scroll-target="#the-crossover-point">The Crossover Point</a></li>
+  <li><a href="#the-crossover-point-and-what-it-does-not-mean" id="toc-the-crossover-point-and-what-it-does-not-mean" class="nav-link" data-scroll-target="#the-crossover-point-and-what-it-does-not-mean">The Crossover Point — and What It Does Not Mean</a></li>
+  <li><a href="#signal-versus-noise" id="toc-signal-versus-noise" class="nav-link" data-scroll-target="#signal-versus-noise">Signal versus Noise</a></li>
+  <li><a href="#compounding-over-a-series" id="toc-compounding-over-a-series" class="nav-link" data-scroll-target="#compounding-over-a-series">Compounding over a Series</a></li>
   <li><a href="#robustness-three-simulation-models" id="toc-robustness-three-simulation-models" class="nav-link" data-scroll-target="#robustness-three-simulation-models">Robustness: Three Simulation Models</a></li>
   <li><a href="#professional-level-sequences" id="toc-professional-level-sequences" class="nav-link" data-scroll-target="#professional-level-sequences">Professional-Level Sequences</a></li>
   <li><a href="#want-to-explore-further" id="toc-want-to-explore-further" class="nav-link" data-scroll-target="#want-to-explore-further">Want to explore further?</a></li>
@@ -219,33 +224,49 @@ ul.task-list li input[type="checkbox"] {
 <p>Notice how the distributions shift and compress differently under each system. At the recreational level, both systems produce similar shapes. At the professional level, World Bowling scores compress toward 300 while traditional scores maintain a wider spread.</p>
 <p><img src="images/fig8_tier_distributions.png" class="img-fluid"></p>
 </section>
-<section id="the-crossover-point" class="level2">
-<h2 class="anchored" data-anchor-id="the-crossover-point">The Crossover Point</h2>
-<p>The key finding: <strong>score spread crosses over at approximately 50% strike rate.</strong></p>
+<section id="the-crossover-point-and-what-it-does-not-mean" class="level2">
+<h2 class="anchored" data-anchor-id="the-crossover-point-and-what-it-does-not-mean">The Crossover Point — and What It Does Not Mean</h2>
+<p>The score-spread curves cross at a strike rate of <strong>48.7%</strong> (95% bootstrap CI 48.2–49.1%).</p>
 <ul>
-<li><strong>Below 50%</strong> (recreational, club): World Bowling provides <em>more</em> score spread. Its simplicity is a net benefit here.</li>
-<li><strong>Above 50%</strong> (elite, professional): Traditional scoring provides <em>more</em> spread — over 30% more at the Top 10 level.</li>
+<li><strong>Below the crossover</strong> (recreational, club): World Bowling provides <em>more</em> score spread.</li>
+<li><strong>Above the crossover</strong> (elite, professional): traditional scoring provides <em>more</em> spread — over 30% more at the Top 10 level.</li>
 </ul>
 <p><img src="images/fig9_mean_scores_tiers.png" class="img-fluid"></p>
-<p>The right panel shows the crossover clearly — the standard deviation lines cross between Competitive and Elite levels.</p>
+<p>The standard deviation lines cross between the Competitive and Elite levels.</p>
 <p><img src="images/fig10_crossover_analysis.png" class="img-fluid"></p>
+<p>It is tempting to read this as a crossover in <em>discrimination</em> — as if World Bowling separates players better below 50% and traditional scoring better above it. That reading is wrong. Standard deviation measures how wide the score distribution is, not how much of that width reflects genuine differences in player ability. The next section decomposes the spread into signal and noise.</p>
+</section>
+<section id="signal-versus-noise" class="level2">
+<h2 class="anchored" data-anchor-id="signal-versus-noise">Signal versus Noise</h2>
+<p>We treat each scoring system as a measurement instrument and estimate its single-game reliability: the fraction of one game’s score variance attributable to real differences between players, rather than game-to-game noise.</p>
+<p><img src="images/fig14_reliability.png" class="img-fluid"></p>
+<p>The two systems have statistically indistinguishable single-game reliability at every competitive, professional and elite skill level. Traditional scoring’s larger spread at elite levels is mostly <em>within-player</em> noise: the amplifying bonus structure inflates signal and noise together, leaving their ratio essentially unchanged.</p>
+<p>So where does commutativity actually cost something? In measuring <em>how</em> a player arranges a fixed number of strikes. At a fixed 66% strike rate, a player’s mean traditional score correlates with true streakiness at <strong>r = 0.49</strong> (95% CI 0.37–0.60), while the World Bowling correlation is <strong>r = −0.04</strong> (95% CI −0.20–0.12), indistinguishable from zero.</p>
+<p><img src="images/fig15_streakiness.png" class="img-fluid"></p>
+<p>World Bowling is not merely noisier at detecting streakiness; it is structurally incapable of detecting it, exactly as commutativity requires.</p>
+</section>
+<section id="compounding-over-a-series" class="level2">
+<h2 class="anchored" data-anchor-id="compounding-over-a-series">Compounding over a Series</h2>
+<p>The per-game streakiness effect is moderate (Cohen’s <em>d</em> = 0.23), but competition is decided over multi-game blocks. An independent per-game advantage compounds: the expected total-score gap grows linearly with the number of games while its standard deviation grows only as the square root, so the series-level effect size grows as √n.</p>
+<p><img src="images/fig16_series_compounding.png" class="img-fluid"></p>
+<p>Under traditional scoring, a maximally streaky player’s probability of winning a head-to-head series against a streak-free player of identical skill rises from 57% over one game to 67% over six games and about 90% over 48 games. Under World Bowling, the same player’s win probability stays near chance (53% even at 48 games). These are upper bounds: they contrast the extremes of the swept streakiness range, and the real population dispersion of streakiness is not yet established.</p>
 </section>
 <section id="robustness-three-simulation-models" class="level2">
 <h2 class="anchored" data-anchor-id="robustness-three-simulation-models">Robustness: Three Simulation Models</h2>
 <p>Does the finding hold if we make the simulation more realistic? We tested three models:</p>
 <ol type="1">
-<li><strong>Independent</strong> — each ball is statistically independent (conservative baseline)</li>
+<li><strong>Independent</strong> — each ball is statistically independent (base case)</li>
 <li><strong>Momentum</strong> — strike probability shifts ±5% based on the previous frame</li>
 <li><strong>Markov chain + spare difficulty</strong> — state-dependent strike probabilities calibrated from PBA data, with leave-dependent spare conversion rates</li>
 </ol>
-<p>All three models agree on the direction. More realistic models make the traditional scoring advantage <em>larger</em>, not smaller.</p>
+<p>All three models agree on the <em>direction</em> of the spread effect at every tier. The magnitude is model-sensitive: the momentum model amplifies the gap, while the Markov model is close to independence at the top tier. The independent model is not uniformly conservative, so we use it as the reference case rather than as a lower bound.</p>
 <p><img src="images/fig12_model_robustness.png" class="img-fluid"></p>
 </section>
 <section id="professional-level-sequences" class="level2">
 <h2 class="anchored" data-anchor-id="professional-level-sequences">Professional-Level Sequences</h2>
 <p>At the professional level, specific game sequences show large score differences between the systems. The systems agree at the extremes (perfect game, all spares) but diverge substantially for the mixed sequences that make up real competitive bowling.</p>
 <p><img src="images/fig11_professional_sequences.png" class="img-fluid"></p>
-<p>Key observation: “4 strikes then spares” scores 195 under traditional but 210 under World Bowling. “Spares then 4 strikes” scores 215 traditional but 210 World Bowling. <strong>Same frames, different order — traditional scoring encodes the difference, World Bowling erases it.</strong></p>
+<p>Key observation: four strikes followed by six spares scores 195 under traditional but 210 under World Bowling; spares followed by four strikes scores 215 traditional but 210 World Bowling. <strong>Same frames, different order — traditional scoring encodes the difference, World Bowling erases it.</strong></p>
 </section>
 <section id="want-to-explore-further" class="level2">
 <h2 class="anchored" data-anchor-id="want-to-explore-further">Want to explore further?</h2>

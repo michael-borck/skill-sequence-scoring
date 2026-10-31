@@ -16,6 +16,9 @@ FIGS=(
   fig10_crossover_analysis
   fig11_professional_sequences
   fig12_model_robustness
+  fig14_reliability
+  fig15_streakiness
+  fig16_series_compounding
 )
 
 for f in "${FIGS[@]}"; do

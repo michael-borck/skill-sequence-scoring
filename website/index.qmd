@@ -3,7 +3,7 @@ title: "Skill, Sequence, and Scoring"
 subtitle: "A Mathematical Comparison of Traditional and World Bowling Scoring Systems"
 ---
 
-Read the paper: [HTML](paper.html) | [PDF](https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf)
+Read the paper: [PDF](https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf) | [Manuscript source](https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.qmd)
 
 ## Overview
 
@@ -19,23 +19,23 @@ The paper demonstrates that traditional ten-pin bowling scoring and the World Bo
 
 ### 1. Traditional scoring is sequence-sensitive
 
-The order of frames matters. The same frame composition can produce a score range of **up to 39 points** under traditional scoring, while World Bowling collapses all orderings to a single score.
+The order of frames matters. The same frame composition can produce a score range of **up to 75 points** under traditional scoring, while World Bowling collapses all orderings to a single score.
 
 **[Try it yourself &rarr;](explorer.qmd)**
 
-### 2. Traditional scoring has a compounding reward gradient
+### 2. A strike-run premium, not a rising marginal
 
-Each consecutive strike is worth more than the last. Under World Bowling, every strike is worth the same regardless of context.
+A strike in a run earns the full 21-point premium over an open frame; an isolated strike earns only 10. The total value of a run is non-linear in its length, although the marginal value of extending a long run is constant. Under World Bowling, every strike is worth the same 30 points regardless of context.
 
 **[Explore the gradient &rarr;](reward.qmd)**
 
-### 3. The crossover point is ~50% strike rate
+### 3. The two systems are equally reliable on raw skill
 
-Below 50% strike rate, World Bowling provides more score spread. Above it, traditional scoring provides **33% more spread** at the professional level.
+A variance decomposition shows nearly identical single-game reliability (ICC) across the competitive range. Traditional scoring's wider spread at elite levels is mostly within-player noise, not better discrimination of raw skill.
 
-### 4. Within-tier discrimination matters most
+### 4. The exclusive advantage is sequencing
 
-Both systems separate recreational from professional players equally well. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes.
+At a fixed strike rate, traditional scores track a player's tendency to string strikes together (r = 0.49, 95% CI 0.37–0.60), while World Bowling is structurally blind to it (r = −0.04, 95% CI −0.20–0.12). The advantage compounds over a series: a maximally streaky player wins about 90% of 48-game traditional series against a streak-free player of identical skill, against roughly chance under current-frame scoring.
 
 ## Reproducibility
 
@@ -50,10 +50,11 @@ git clone https://github.com/michael-borck/skill-sequence-scoring.git
 cd skill-sequence-scoring
 pip install -r requirements.txt
 cd src
-python bowling_distributions.py    # Exact score distributions
-python bowling_analysis.py         # Sequence sensitivity analysis
-python bowling_simulation.py       # Monte Carlo simulation
-python bowling_visualisations.py   # Generate figures 1-5
-python sequence_permutations.py    # Exhaustive permutation analysis
-python simulation_figures.py       # Generate figures 8-11
+python bowling_distributions.py       # Exact score distributions
+python bowling_analysis.py            # Sequence sensitivity and reward gradient
+python bowling_simulation.py          # Monte Carlo simulation
+python discrimination_analysis.py     # Reliability, streakiness, series compounding
+python robustness_extras.py           # Bootstrap CIs and sensitivity analysis
+python sequence_permutations.py       # Exhaustive permutation analysis
+python bowling_visualisations.py && python simulation_figures.py && python discrimination_figures.py
 ```

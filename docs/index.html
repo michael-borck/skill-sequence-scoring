@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6033a600180109c3731f6a886c29932c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9d96f532d65220ca877c0304385df42f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -168,9 +171,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">Key Findings</a>
   <ul class="collapse">
   <li><a href="#traditional-scoring-is-sequence-sensitive" id="toc-traditional-scoring-is-sequence-sensitive" class="nav-link" data-scroll-target="#traditional-scoring-is-sequence-sensitive">1. Traditional scoring is sequence-sensitive</a></li>
-  <li><a href="#traditional-scoring-has-a-compounding-reward-gradient" id="toc-traditional-scoring-has-a-compounding-reward-gradient" class="nav-link" data-scroll-target="#traditional-scoring-has-a-compounding-reward-gradient">2. Traditional scoring has a compounding reward gradient</a></li>
-  <li><a href="#the-crossover-point-is-50-strike-rate" id="toc-the-crossover-point-is-50-strike-rate" class="nav-link" data-scroll-target="#the-crossover-point-is-50-strike-rate">3. The crossover point is ~50% strike rate</a></li>
-  <li><a href="#within-tier-discrimination-matters-most" id="toc-within-tier-discrimination-matters-most" class="nav-link" data-scroll-target="#within-tier-discrimination-matters-most">4. Within-tier discrimination matters most</a></li>
+  <li><a href="#a-strike-run-premium-not-a-rising-marginal" id="toc-a-strike-run-premium-not-a-rising-marginal" class="nav-link" data-scroll-target="#a-strike-run-premium-not-a-rising-marginal">2. A strike-run premium, not a rising marginal</a></li>
+  <li><a href="#the-two-systems-are-equally-reliable-on-raw-skill" id="toc-the-two-systems-are-equally-reliable-on-raw-skill" class="nav-link" data-scroll-target="#the-two-systems-are-equally-reliable-on-raw-skill">3. The two systems are equally reliable on raw skill</a></li>
+  <li><a href="#the-exclusive-advantage-is-sequencing" id="toc-the-exclusive-advantage-is-sequencing" class="nav-link" data-scroll-target="#the-exclusive-advantage-is-sequencing">4. The exclusive advantage is sequencing</a></li>
   </ul></li>
   <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
   </ul>
@@ -199,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Read the paper: <a href="paper.html">HTML</a> | <a href="https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf">PDF</a></p>
+<p>Read the paper: <a href="https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.pdf">PDF</a> | <a href="https://github.com/michael-borck/skill-sequence-scoring/blob/main/paper/bowling_paper.qmd">Manuscript source</a></p>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>This interactive companion site accompanies the paper:</p>
@@ -213,21 +216,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
 <section id="traditional-scoring-is-sequence-sensitive" class="level3">
 <h3 class="anchored" data-anchor-id="traditional-scoring-is-sequence-sensitive">1. Traditional scoring is sequence-sensitive</h3>
-<p>The order of frames matters. The same frame composition can produce a score range of <strong>up to 39 points</strong> under traditional scoring, while World Bowling collapses all orderings to a single score.</p>
+<p>The order of frames matters. The same frame composition can produce a score range of <strong>up to 75 points</strong> under traditional scoring, while World Bowling collapses all orderings to a single score.</p>
 <p><strong><a href="./explorer.html">Try it yourself →</a></strong></p>
 </section>
-<section id="traditional-scoring-has-a-compounding-reward-gradient" class="level3">
-<h3 class="anchored" data-anchor-id="traditional-scoring-has-a-compounding-reward-gradient">2. Traditional scoring has a compounding reward gradient</h3>
-<p>Each consecutive strike is worth more than the last. Under World Bowling, every strike is worth the same regardless of context.</p>
+<section id="a-strike-run-premium-not-a-rising-marginal" class="level3">
+<h3 class="anchored" data-anchor-id="a-strike-run-premium-not-a-rising-marginal">2. A strike-run premium, not a rising marginal</h3>
+<p>A strike in a run earns the full 21-point premium over an open frame; an isolated strike earns only 10. The total value of a run is non-linear in its length, although the marginal value of extending a long run is constant. Under World Bowling, every strike is worth the same 30 points regardless of context.</p>
 <p><strong><a href="./reward.html">Explore the gradient →</a></strong></p>
 </section>
-<section id="the-crossover-point-is-50-strike-rate" class="level3">
-<h3 class="anchored" data-anchor-id="the-crossover-point-is-50-strike-rate">3. The crossover point is ~50% strike rate</h3>
-<p>Below 50% strike rate, World Bowling provides more score spread. Above it, traditional scoring provides <strong>33% more spread</strong> at the professional level.</p>
+<section id="the-two-systems-are-equally-reliable-on-raw-skill" class="level3">
+<h3 class="anchored" data-anchor-id="the-two-systems-are-equally-reliable-on-raw-skill">3. The two systems are equally reliable on raw skill</h3>
+<p>A variance decomposition shows nearly identical single-game reliability (ICC) across the competitive range. Traditional scoring’s wider spread at elite levels is mostly within-player noise, not better discrimination of raw skill.</p>
 </section>
-<section id="within-tier-discrimination-matters-most" class="level3">
-<h3 class="anchored" data-anchor-id="within-tier-discrimination-matters-most">4. Within-tier discrimination matters most</h3>
-<p>Both systems separate recreational from professional players equally well. The critical difference is in separating two elite players who differ in their ability to sustain consecutive strikes.</p>
+<section id="the-exclusive-advantage-is-sequencing" class="level3">
+<h3 class="anchored" data-anchor-id="the-exclusive-advantage-is-sequencing">4. The exclusive advantage is sequencing</h3>
+<p>At a fixed strike rate, traditional scores track a player’s tendency to string strikes together (r = 0.49, 95% CI 0.37–0.60), while World Bowling is structurally blind to it (r = −0.04, 95% CI −0.20–0.12). The advantage compounds over a series: a maximally streaky player wins about 90% of 48-game traditional series against a streak-free player of identical skill, against roughly chance under current-frame scoring.</p>
 </section>
 </section>
 <section id="reproducibility" class="level2">
@@ -241,12 +244,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> skill-sequence-scoring</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> src</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_distributions.py    <span class="co"># Exact score distributions</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_analysis.py         <span class="co"># Sequence sensitivity analysis</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_simulation.py       <span class="co"># Monte Carlo simulation</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_visualisations.py   <span class="co"># Generate figures 1-5</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> sequence_permutations.py    <span class="co"># Exhaustive permutation analysis</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> simulation_figures.py       <span class="co"># Generate figures 8-11</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_distributions.py       <span class="co"># Exact score distributions</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_analysis.py            <span class="co"># Sequence sensitivity and reward gradient</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_simulation.py          <span class="co"># Monte Carlo simulation</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> discrimination_analysis.py     <span class="co"># Reliability, streakiness, series compounding</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> robustness_extras.py           <span class="co"># Bootstrap CIs and sensitivity analysis</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> sequence_permutations.py       <span class="co"># Exhaustive permutation analysis</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> bowling_visualisations.py <span class="kw">&amp;&amp;</span> <span class="ex">python</span> simulation_figures.py <span class="kw">&amp;&amp;</span> <span class="ex">python</span> discrimination_figures.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>

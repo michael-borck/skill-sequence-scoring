@@ -24,28 +24,52 @@ Notice how the distributions shift and compress differently under each system. A
 
 ![](images/fig8_tier_distributions.png)
 
-## The Crossover Point
+## The Crossover Point — and What It Does Not Mean
 
-The key finding: **score spread crosses over at approximately 50% strike rate.**
+The score-spread curves cross at a strike rate of **48.7%** (95% bootstrap CI 48.2–49.1%).
 
-- **Below 50%** (recreational, club): World Bowling provides *more* score spread. Its simplicity is a net benefit here.
-- **Above 50%** (elite, professional): Traditional scoring provides *more* spread — over 30% more at the Top 10 level.
+- **Below the crossover** (recreational, club): World Bowling provides *more* score spread.
+- **Above the crossover** (elite, professional): traditional scoring provides *more* spread — over 30% more at the Top 10 level.
 
 ![](images/fig9_mean_scores_tiers.png)
 
-The right panel shows the crossover clearly — the standard deviation lines cross between Competitive and Elite levels.
+The standard deviation lines cross between the Competitive and Elite levels.
 
 ![](images/fig10_crossover_analysis.png)
+
+It is tempting to read this as a crossover in *discrimination* — as if World Bowling separates players better below 50% and traditional scoring better above it. That reading is wrong. Standard deviation measures how wide the score distribution is, not how much of that width reflects genuine differences in player ability. The next section decomposes the spread into signal and noise.
+
+## Signal versus Noise
+
+We treat each scoring system as a measurement instrument and estimate its single-game reliability: the fraction of one game's score variance attributable to real differences between players, rather than game-to-game noise.
+
+![](images/fig14_reliability.png)
+
+The two systems have statistically indistinguishable single-game reliability at every competitive, professional and elite skill level. Traditional scoring's larger spread at elite levels is mostly *within-player* noise: the amplifying bonus structure inflates signal and noise together, leaving their ratio essentially unchanged.
+
+So where does commutativity actually cost something? In measuring *how* a player arranges a fixed number of strikes. At a fixed 66% strike rate, a player's mean traditional score correlates with true streakiness at **r = 0.49** (95% CI 0.37–0.60), while the World Bowling correlation is **r = −0.04** (95% CI −0.20–0.12), indistinguishable from zero.
+
+![](images/fig15_streakiness.png)
+
+World Bowling is not merely noisier at detecting streakiness; it is structurally incapable of detecting it, exactly as commutativity requires.
+
+## Compounding over a Series
+
+The per-game streakiness effect is moderate (Cohen's *d* = 0.23), but competition is decided over multi-game blocks. An independent per-game advantage compounds: the expected total-score gap grows linearly with the number of games while its standard deviation grows only as the square root, so the series-level effect size grows as √n.
+
+![](images/fig16_series_compounding.png)
+
+Under traditional scoring, a maximally streaky player's probability of winning a head-to-head series against a streak-free player of identical skill rises from 57% over one game to 67% over six games and about 90% over 48 games. Under World Bowling, the same player's win probability stays near chance (53% even at 48 games). These are upper bounds: they contrast the extremes of the swept streakiness range, and the real population dispersion of streakiness is not yet established.
 
 ## Robustness: Three Simulation Models
 
 Does the finding hold if we make the simulation more realistic? We tested three models:
 
-1. **Independent** — each ball is statistically independent (conservative baseline)
+1. **Independent** — each ball is statistically independent (base case)
 2. **Momentum** — strike probability shifts ±5% based on the previous frame
 3. **Markov chain + spare difficulty** — state-dependent strike probabilities calibrated from PBA data, with leave-dependent spare conversion rates
 
-All three models agree on the direction. More realistic models make the traditional scoring advantage *larger*, not smaller.
+All three models agree on the *direction* of the spread effect at every tier. The magnitude is model-sensitive: the momentum model amplifies the gap, while the Markov model is close to independence at the top tier. The independent model is not uniformly conservative, so we use it as the reference case rather than as a lower bound.
 
 ![](images/fig12_model_robustness.png)
 
@@ -55,7 +79,7 @@ At the professional level, specific game sequences show large score differences 
 
 ![](images/fig11_professional_sequences.png)
 
-Key observation: "4 strikes then spares" scores 195 under traditional but 210 under World Bowling. "Spares then 4 strikes" scores 215 traditional but 210 World Bowling. **Same frames, different order — traditional scoring encodes the difference, World Bowling erases it.**
+Key observation: four strikes followed by six spares scores 195 under traditional but 210 under World Bowling; spares followed by four strikes scores 215 traditional but 210 World Bowling. **Same frames, different order — traditional scoring encodes the difference, World Bowling erases it.**
 
 ## Want to explore further?
 
